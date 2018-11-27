@@ -7,12 +7,21 @@
 //
 
 import UIKit
+import Expander
 
 class ViewController: UIViewController {
+
+    var expanderView: EVExpanderView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+
+        expanderView = EVExpanderView.serialization(in: view)
+        expanderView.layout = .right
+        expanderView.titleLabel.text = "折叠"
+        expanderView.expandType = .down
+        view.addSubview(expanderView)
     }
 
 
