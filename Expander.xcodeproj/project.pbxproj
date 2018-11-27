@@ -8,16 +8,35 @@
 
 /* Begin PBXBuildFile section */
 		841DFBA521AD199D0012DFAB /* Expander.h in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBA321AD199D0012DFAB /* Expander.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		841DFBB221AD19BF0012DFAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB121AD19BF0012DFAB /* AppDelegate.swift */; };
+		841DFBB421AD19BF0012DFAB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB321AD19BF0012DFAB /* ViewController.swift */; };
+		841DFBB721AD19BF0012DFAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB521AD19BF0012DFAB /* Main.storyboard */; };
+		841DFBB921AD19C10012DFAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB821AD19C10012DFAB /* Assets.xcassets */; };
+		841DFBBC21AD19C10012DFAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBBA21AD19C10012DFAB /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		841DFBA021AD199D0012DFAB /* Expander.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Expander.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		841DFBA321AD199D0012DFAB /* Expander.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Expander.h; sourceTree = "<group>"; };
 		841DFBA421AD199D0012DFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		841DFBAF21AD19BF0012DFAB /* ExpanderExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpanderExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		841DFBB121AD19BF0012DFAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		841DFBB321AD19BF0012DFAB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		841DFBB621AD19BF0012DFAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		841DFBB821AD19C10012DFAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		841DFBBB21AD19C10012DFAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		841DFBBD21AD19C10012DFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		841DFB9D21AD199D0012DFAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		841DFBAC21AD19BF0012DFAB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -31,6 +50,7 @@
 			isa = PBXGroup;
 			children = (
 				841DFBA221AD199D0012DFAB /* Expander */,
+				841DFBB021AD19BF0012DFAB /* ExpanderExample */,
 				841DFBA121AD199D0012DFAB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				841DFBA021AD199D0012DFAB /* Expander.framework */,
+				841DFBAF21AD19BF0012DFAB /* ExpanderExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -50,6 +71,19 @@
 				841DFBA421AD199D0012DFAB /* Info.plist */,
 			);
 			path = Expander;
+			sourceTree = "<group>";
+		};
+		841DFBB021AD19BF0012DFAB /* ExpanderExample */ = {
+			isa = PBXGroup;
+			children = (
+				841DFBB121AD19BF0012DFAB /* AppDelegate.swift */,
+				841DFBB321AD19BF0012DFAB /* ViewController.swift */,
+				841DFBB521AD19BF0012DFAB /* Main.storyboard */,
+				841DFBB821AD19C10012DFAB /* Assets.xcassets */,
+				841DFBBA21AD19C10012DFAB /* LaunchScreen.storyboard */,
+				841DFBBD21AD19C10012DFAB /* Info.plist */,
+			);
+			path = ExpanderExample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,16 +118,37 @@
 			productReference = 841DFBA021AD199D0012DFAB /* Expander.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		841DFBAE21AD19BF0012DFAB /* ExpanderExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 841DFBBE21AD19C10012DFAB /* Build configuration list for PBXNativeTarget "ExpanderExample" */;
+			buildPhases = (
+				841DFBAB21AD19BF0012DFAB /* Sources */,
+				841DFBAC21AD19BF0012DFAB /* Frameworks */,
+				841DFBAD21AD19BF0012DFAB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExpanderExample;
+			productName = ExpanderExample;
+			productReference = 841DFBAF21AD19BF0012DFAB /* ExpanderExample.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		841DFB9721AD199D0012DFAB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = Develop;
 				TargetAttributes = {
 					841DFB9F21AD199D0012DFAB = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					841DFBAE21AD19BF0012DFAB = {
 						CreatedOnToolsVersion = 10.1;
 					};
 				};
@@ -104,6 +159,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 841DFB9621AD199D0012DFAB;
 			productRefGroup = 841DFBA121AD199D0012DFAB /* Products */;
@@ -111,6 +167,7 @@
 			projectRoot = "";
 			targets = (
 				841DFB9F21AD199D0012DFAB /* Expander */,
+				841DFBAE21AD19BF0012DFAB /* ExpanderExample */,
 			);
 		};
 /* End PBXProject section */
@@ -120,6 +177,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		841DFBAD21AD19BF0012DFAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				841DFBBC21AD19C10012DFAB /* LaunchScreen.storyboard in Resources */,
+				841DFBB921AD19C10012DFAB /* Assets.xcassets in Resources */,
+				841DFBB721AD19BF0012DFAB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +200,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		841DFBAB21AD19BF0012DFAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				841DFBB421AD19BF0012DFAB /* ViewController.swift in Sources */,
+				841DFBB221AD19BF0012DFAB /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		841DFBB521AD19BF0012DFAB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				841DFBB621AD19BF0012DFAB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		841DFBBA21AD19C10012DFAB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				841DFBBB21AD19C10012DFAB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		841DFBA621AD199D0012DFAB /* Debug */ = {
@@ -306,6 +401,40 @@
 			};
 			name = Release;
 		};
+		841DFBBF21AD19C10012DFAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ExpanderExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.develop.ExpanderExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		841DFBC021AD19C10012DFAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = ExpanderExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.develop.ExpanderExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -323,6 +452,15 @@
 			buildConfigurations = (
 				841DFBA921AD199D0012DFAB /* Debug */,
 				841DFBAA21AD199D0012DFAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		841DFBBE21AD19C10012DFAB /* Build configuration list for PBXNativeTarget "ExpanderExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				841DFBBF21AD19C10012DFAB /* Debug */,
+				841DFBC021AD19C10012DFAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
