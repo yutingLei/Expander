@@ -78,6 +78,15 @@ public class EVExpanderView: UIView {
         return label
     }()
 
+    /// 类容视图
+    public lazy var contentView: UIView = {
+        let view = UIView(frame: CGRect(x: 40, y: 40, width: 1, height: 1))
+        view.backgroundColor = .white
+        addSubview(view)
+        bringSubviewToFront(_tapButton)
+        return view
+    }()
+
     /// 序列化视图
     public class func serialization(in superView: UIView) -> EVExpanderView {
         let expanderView = EVExpanderView()
@@ -118,7 +127,7 @@ public extension EVExpanderView {
             self.layer.cornerRadius = 10
 
             /// 获取xy值
-            let x = self.layout == .left ? self._sView.bounds.width - self.size.width - self.padding.right : self.padding.left
+            let x = self.padding.left
             var y: CGFloat = self.frame.minY
 
             /// 根据不同类型，计算原点
@@ -150,6 +159,9 @@ public extension EVExpanderView {
 
             /// 设置标题的frame
             self.titleLabel.frame = self._tapButton.bounds
+
+            /// 显示contentView
+            self.contentView.frame = CGRect(x: 4, y: 30, width: self.bounds.width - 8, height: self.bounds.height - 34)
         }
     }
 
@@ -158,10 +170,18 @@ public extension EVExpanderView {
         guard _isExpanded else { print("Has already folded"); return }
         UIView.animate(withDuration: 0.5) {[unowned self] in
             self.layer.cornerRadius = self.size.width / 2
+
+            /// 恢复大小
             self.frame.origin = self._preExpandOrigin ?? CGPoint.zero
             self.frame.size = self.size
+
+            /// 设置标题和可点击按钮
             self._tapButton.frame = self.bounds
             self.titleLabel.frame = self._tapButton.bounds
+
+            /// 隐藏contentView
+            let x = self.layout == .left ? 0 : self.frame.maxX
+            self.contentView.frame = CGRect(x: x, y: self.bounds.midY, width: 1, height: 1)
         }
     }
 }
