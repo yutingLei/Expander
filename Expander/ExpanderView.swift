@@ -70,7 +70,7 @@ public class EVExpanderView: UIView {
     }()
 
     /// 标题
-    public lazy var titleLabel: UILabel = {
+    public private(set) lazy var titleLabel: UILabel = {
         let label = UILabel(frame: bounds)
         label.textColor = .white
         label.textAlignment = .center
@@ -80,7 +80,7 @@ public class EVExpanderView: UIView {
     }()
 
     /// 类容视图
-    public lazy var contentView: UIView = {
+    public private(set) lazy var contentView: UIView = {
         let view = UIView(frame: CGRect(x: 40, y: 40, width: 1, height: 1))
         view.backgroundColor = .white
         addSubview(view)
