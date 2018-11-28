@@ -130,7 +130,7 @@ public extension EVExpanderView {
         _preExpandOrigin = frame.origin
 
         /// 展开动画
-        UIView.animate(withDuration: 0.5) {[unowned self] in
+        UIView.animate(withDuration: 0.5, animations: {[unowned self] in
 
             /// 设置圆角
             self.layer.cornerRadius = 10
@@ -168,13 +168,13 @@ public extension EVExpanderView {
 
             /// 显示contentView
             self.contentView.frame = CGRect(x: 4, y: 30, width: self.bounds.width - 8, height: self.bounds.height - 34)
-        }
+        }) {_ in self._isExpanded = true }
     }
 
     /// 收拢
     public func fold() {
         guard _isExpanded else { print("Has already folded"); return }
-        UIView.animate(withDuration: 0.5) {[unowned self] in
+        UIView.animate(withDuration: 0.5, animations: {
             self.layer.cornerRadius = self.layout.size.width / 2
 
             /// 恢复大小
@@ -187,7 +187,7 @@ public extension EVExpanderView {
             /// 隐藏contentView
             let x = self.layout.location == .left ? 0 : self.frame.maxX
             self.contentView.frame = CGRect(x: x, y: self.bounds.midY, width: 1, height: 1)
-        }
+        }) { _ in self._isExpanded = false }
     }
 }
 
