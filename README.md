@@ -4,14 +4,15 @@
 
 Expander is an interesting view that can be expanded or folded. and it come with feature that easy to use.
 
-## Install
-Expander is available on [`Carthage`](https://github.com/Carthage/Carthage). It can be installed with the following command with a `Cartfile`:
+## Installation
+
+使用[`Carthage`](https://github.com/Carthage/Carthage)命令导入，在此之前你必须创建一个名叫`Cartfile`的文件。
 
 ```sh
 carthage update --platform iOS
 ```
 
 ## TODO
-- [x] Implement basic functions  
-- [ ] Add gravity for expander  
-- [ ] Add Pan gesture into expander  
+- [x] 实现基础功能 
+- [ ] 添加重力感应  
+- [ ] flex创建方式  
