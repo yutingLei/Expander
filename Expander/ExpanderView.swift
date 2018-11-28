@@ -60,6 +60,7 @@ public class EVExpanderView: UIView {
     public var size = CGSize(width: 80, height: 80) {
         willSet {
             frame.size = newValue
+            layer.cornerRadius = min(newValue.width, newValue.height) / 2
         }
     }
 
