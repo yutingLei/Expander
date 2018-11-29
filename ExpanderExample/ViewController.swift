@@ -18,10 +18,21 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
 
         expanderView = EVExpanderView.serialization(in: view)
-        expanderView.layout = .right
-        expanderView.titleLabel.text = "折叠"
+        expanderView.applyLayout(EVExpanderViewLayout(expandSize: CGSize.init(width: 300, height: 300)))
         expanderView.expandType = .down
         view.addSubview(expanderView)
+
+        /// 添加数据
+        expanderView.applyImageTitles([["title": "德国", "image": "GM.png"],
+                                       ["title": "印度", "image": "IN.png"],
+                                       ["title": "日本", "image": "JP.png"],
+                                       ["title": "朝鲜", "image": "SK.png"],
+                                       ["title": "荷兰", "image": "NL.png"],
+                                       ["title": "英国", "image": "UK.png"],
+                                       ["title": "美国", "image": "US.png"],
+                                       ["title": "加拿大", "image": "CA.png"],
+                                       ["title": "新加坡", "image": "SP.png"]],
+                                      withKeys: "title", "image")
     }
 
 

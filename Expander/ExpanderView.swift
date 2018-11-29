@@ -73,8 +73,11 @@ public class EVExpanderView: UIView {
 
     /// 类容视图
     public private(set) lazy var contentView: UIView = {
-        let view = UIView(frame: CGRect(x: bounds.width / 2, y: bounds.height / 2, width: 1, height: 1))
+        let w = _expandSize.width - 8
+        let h = _expandSize.height
+        let view = UIView(frame: CGRect(x: 4, y: 30, width: w - 8, height: h - 34))
         view.backgroundColor = .white
+        view.alpha = 0
         addSubview(view)
         bringSubviewToFront(_tapButton)
         return view
@@ -167,7 +170,7 @@ public extension EVExpanderView {
             }
 
             /// 显示contentView
-            self.contentView.frame = CGRect(x: 4, y: 30, width: self.bounds.width - 8, height: self.bounds.height - 34)
+            self.contentView.alpha = 1
         }) {_ in self._isExpanded = true }
     }
 
@@ -185,10 +188,145 @@ public extension EVExpanderView {
             self._tapButton.frame = self.bounds
 
             /// 隐藏contentView
-            let x = self.layout.location == .left ? 0 : self.frame.maxX
-            self.contentView.frame = CGRect(x: x, y: self.bounds.midY, width: 1, height: 1)
+            self.contentView.alpha = 0
         }) { _ in self._isExpanded = false }
     }
 }
 
+/// 显示Cell扩展
+extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
 
+    /// 保存数据
+    public struct EVExpanderViewCellHolder {
+        static var model = "title-image"
+        static var getValueKeys: [String]!
+        static var dataSource: [[String: Any]]!
+        static var collectionView: UICollectionView?
+        static var cellConfiguration: EVExpanderViewCellConfiguration!
+    }
+
+    /// 显示模板视图,图片-标题
+    ///
+    /// - Parameters:
+    ///   - datas: 数据数组
+    ///   - cellConfiguration: 模板cell视图配置
+    ///   - keys: 取的标题和图片名称的key值
+    public func applyImageTitles(_ datas: [[String: Any]],
+                                 cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
+                                 withKeys keys: String...)
+    {
+        /// 是否有数据
+        guard datas.count != 0 else { return }
+        EVExpanderViewCellHolder.model = "image-title"
+        EVExpanderViewCellHolder.dataSource = datas
+        EVExpanderViewCellHolder.getValueKeys = keys
+        applyDatas(with: cellConfiguration)
+    }
+
+    /// 显示模板视图,标题-图片
+    ///
+    /// - Parameters:
+    ///   - datas: 数据数组
+    ///   - cellConfiguration: 模板cell视图配置
+    ///   - keys: 取的标题和图片名称的key值
+    public func applyTitleImages(_ datas: [[String: Any]],
+                                 cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
+                                 withKeys keys: String...)
+    {
+        /// 是否有数据
+        guard datas.count != 0 else { return }
+        EVExpanderViewCellHolder.model = "title-image"
+        EVExpanderViewCellHolder.dataSource = datas
+        EVExpanderViewCellHolder.getValueKeys = keys
+        applyDatas(with: cellConfiguration)
+    }
+
+    /// 应用cell的配置
+    ///
+    /// - Parameter config: cell配置对象
+    internal func applyDatas(with config: EVExpanderViewCellConfiguration) {
+        EVExpanderViewCellHolder.cellConfiguration = config
+
+        /// 初始化collectionView
+        if EVExpanderViewCellHolder.collectionView == nil {
+            let collectionView = UICollectionView(frame: contentView.bounds, collectionViewLayout: config)
+            collectionView.register(EVExpanderViewCell.self, forCellWithReuseIdentifier: "com.expanderview.content.cell")
+            collectionView.backgroundColor = config.spacingColor
+            contentView.addSubview(collectionView)
+
+            /// 保存配置
+            EVExpanderViewCellHolder.collectionView = collectionView
+
+            /// 其它设置
+            collectionView.dataSource = self
+            collectionView.delegate = self
+        } else {
+            EVExpanderViewCellHolder.collectionView?.collectionViewLayout = config
+            EVExpanderViewCellHolder.collectionView?.reloadData()
+        }
+    }
+
+    //MARK: - Collection view datasource
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return EVExpanderViewCellHolder.dataSource.count
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.expanderview.content.cell",
+                                                      for: indexPath) as! EVExpanderViewCell
+        /// 使用模板视图
+        cell.contentView.backgroundColor = EVExpanderViewCellHolder.cellConfiguration.backgroundColor
+
+        /// 创建标题
+        if cell.titleLabel == nil {
+            cell.titleLabel = UILabel(frame: cell.contentView.bounds)
+            cell.titleLabel?.frame.size.height = cell.contentView.bounds.height * 0.25
+            cell.titleLabel?.textColor = .black
+            cell.titleLabel?.textAlignment = .center
+            cell.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+            cell.contentView.addSubview(cell.titleLabel!)
+            if EVExpanderViewCellHolder.model == "image-title" {
+                cell.titleLabel?.frame.origin.y = cell.contentView.bounds.height * 0.75
+            }
+        }
+
+        /// 创建图片
+        if cell.imageView == nil {
+            cell.imageView = UIImageView.init(frame: cell.contentView.bounds)
+            cell.imageView?.frame.origin.y = cell.contentView.bounds.height * 0.25
+            cell.imageView?.frame.size.height = cell.contentView.bounds.height * 0.75
+            cell.imageView?.contentMode = .scaleAspectFit
+            cell.contentView.addSubview(cell.imageView!)
+            if EVExpanderViewCellHolder.model == "image-title" {
+                cell.imageView?.frame.origin.y = 0
+            }
+        }
+
+        /// 赋值
+        let data = EVExpanderViewCellHolder.dataSource[indexPath.row]
+        let title = data[EVExpanderViewCellHolder.getValueKeys[0]] as? String
+        cell.titleLabel?.text = title
+        cell.imageView?.image = EVExpanderHelp.generateImage(by: data[EVExpanderViewCellHolder.getValueKeys[1]] as? String)
+
+        return cell
+    }
+}
+
+/// 自定义cell
+private class EVExpanderViewCell: UICollectionViewCell {
+
+    /// 标题
+    fileprivate var titleLabel: UILabel?
+    /// 图片
+    fileprivate var imageView: UIImageView?
+
+    /// 初始化
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    /// 初始化出错
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
