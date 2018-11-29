@@ -21,7 +21,7 @@ carthage update --platform iOS
 
 使用很少一点代码即可创建`Expander`.
 
-* 使用`serialization(in:)`类方法创建[ExpanderView](###evexpanderview)实例  
+* 使用`serialization(in:)`类方法创建[ExpanderView](#evexpanderview)实例  
 	`注意`: 创建`Expander`实例不能用任何`init`方法
 
 	```swift
@@ -32,7 +32,7 @@ carthage update --platform iOS
 到此，你可以编译和运行了，不妨看看效果再继续下面的类容^_^
 
 * 配置`Expander`
-	- [EVExpanderViewLayout](#viewlayout): 该类用于配置`Expander`各项参数,也可以使用默认参数，忽略该部分。
+	- [EVExpanderViewLayout](#evexpanderviewlayout): 该类用于配置`Expander`各项参数,也可以使用默认参数，忽略该部分。
 	
 		```swift
 		/// 声明配置类
@@ -180,8 +180,8 @@ carthage update --platform iOS
 	| :---: | :---:| :---: |
 	| size | CGSize | ExpanderView的初始大小 |
 	| expandSize | CGSize? | ExpanderView展开后的大小,不设置则使用默认值 |
-	| padding | EVPadding | ExpanderView相对父视图的填充 |
-	| location | EVLocation | ExpanderView在父视图的左边或右边 |
+	| padding | [EVPadding](#evpadding) | ExpanderView相对父视图的填充 |
+	| location | Enum | ExpanderView在父视图的左边或右边 |
 	| distanceToTop | CGFloat? | 视图到父视图顶部的距离，不设置默认在父视图中间 |
 	
 
@@ -193,7 +193,7 @@ EVExpanderViewCellConfiguration继承至UICollectionViewFlowLayout
 	
 	| name | class/type | description |
 	| :---: | :---:| :---: |
-	| spacing | EVPadding | 确定cell与cell之间的间隔 |
+	| spacing | [EVPadding](#evpadding) | 确定cell与cell之间的间隔 |
 	| spacingColor | UIColor | cell父视图的背景色 |
 	| backgroundColor | UIColor | cell的背景色 |
 
