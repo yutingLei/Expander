@@ -37,6 +37,7 @@ public class EVExpanderView: UIView {
     /// 视图布局对象
     public private(set) var layout: EVExpanderViewLayout! {
         willSet {
+            guard !_isExpanded  else { print("展开状态下不能设置layout！"); return }
             /// 设置大小和圆角
             frame.size = newValue.size
             layer.cornerRadius = min(newValue.size.width, newValue.size.height) / 2
@@ -59,21 +60,25 @@ public class EVExpanderView: UIView {
     /// 展开方式
     public var expandType: EVExpandType = .center
 
-    /// 控制展开或收拢的标志，可以使字符串，也可以是图片
-    public var controlFlag: Any! {
+    /// 设置视图展开收拢的控制标志或图片
+    public var controlFlag: (origin: Any, expanded: Any)! {
         willSet {
-            if newValue is String {
-                _tapButton.setTitle(newValue as? String, for: .normal)
+            if let text = newValue.expanded as? String {
+                _tapButton.setTitle(text, for: .selected)
+            } else if let image = newValue.expanded as? UIImage {
+                _tapButton.setImage(image, for: .selected)
             }
-            if newValue is UIImage {
-                _tapButton.setImage(newValue as? UIImage, for: .normal)
+            if let text = newValue.origin as? String {
+                _tapButton.setTitle(text, for: .normal)
+            } else if let image = newValue.origin as? UIImage {
+                _tapButton.setImage(image, for: .normal)
             }
         }
     }
 
     /// 类容视图
     public private(set) lazy var contentView: UIView = {
-        let w = _expandSize.width - 8
+        let w = _expandSize.width
         let h = _expandSize.height
         let view = UIView(frame: CGRect(x: 4, y: 30, width: w - 8, height: h - 34))
         view.backgroundColor = .white
@@ -110,10 +115,11 @@ public class EVExpanderView: UIView {
 
         /// 添加手势视图
         expanderView._tapButton = UIButton(frame: expanderView.bounds)
-        expanderView._tapButton.backgroundColor = UIColor.orange
-        expanderView._tapButton.setTitle("展开", for: .normal)
         expanderView._tapButton.addTarget(expanderView, action: #selector(tapAction(_:)), for: .touchUpInside)
         expanderView.addSubview(expanderView._tapButton)
+
+        /// 设置控制标志
+        expanderView.controlFlag = ("展开", "收拢")
         return expanderView
     }
 }
@@ -124,6 +130,7 @@ public extension EVExpanderView {
     @objc private func tapAction(_ ges: UITapGestureRecognizer) {
         _isExpanded ? fold() : expand()
         _isExpanded = !_isExpanded
+        _tapButton.isSelected = _isExpanded
     }
 
     /// 展开
@@ -139,7 +146,7 @@ public extension EVExpanderView {
             self.layer.cornerRadius = 10
 
             /// 获取xy值
-            let x = self.layout.location == .left ? self.frame.minX : self.layout.padding.left
+            let x = self.layout.location == .left ? self.frame.minX : (self.frame.maxX - self._expandSize.width)
             var y = self.frame.minY
 
             /// 根据不同类型，计算原点
@@ -147,14 +154,14 @@ public extension EVExpanderView {
             case .up:
                 y = self.frame.maxY - self._expandSize.height
                 if y < 0 {
-                    y = 0
+                    y = self.layout.padding.top
                 }
             case .down:
                 if self._sView.bounds.maxY < self.frame.minY + self._expandSize.height {
-                    y = self._sView.bounds.maxY - self._expandSize.height
+                    y = self._sView.bounds.maxY - self._expandSize.height - self.layout.padding.bottom
                 }
             default:
-                y = self.frame.midY - self.layout.expandSize!.height / 2
+                y = self.frame.midY - self._expandSize!.height / 2
                 break
             }
 
@@ -213,7 +220,7 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
     ///   - keys: 取的标题和图片名称的key值
     public func applyImageTitles(_ datas: [[String: Any]],
                                  cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
-                                 withKeys keys: String...)
+                                 withKeys keys: [String])
     {
         /// 是否有数据
         guard datas.count != 0 else { return }
@@ -231,7 +238,7 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
     ///   - keys: 取的标题和图片名称的key值
     public func applyTitleImages(_ datas: [[String: Any]],
                                  cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
-                                 withKeys keys: String...)
+                                 withKeys keys: [String])
     {
         /// 是否有数据
         guard datas.count != 0 else { return }
