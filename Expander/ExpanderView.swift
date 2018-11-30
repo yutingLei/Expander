@@ -214,6 +214,7 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
         static var collectionView: UICollectionView?
         static var cellConfiguration: EVExpanderViewCellConfiguration!
         static var selectedItemHandler: EVSelectedItemHandler?
+        static var currentSelectedIndex: Int?
     }
 
     /// 显示模板视图,图片-标题
@@ -291,8 +292,13 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.expanderview.content.cell",
                                                       for: indexPath) as! EVExpanderViewCell
-        /// 使用模板视图
-        cell.contentView.backgroundColor = EVExpanderViewCellHolder.cellConfiguration.backgroundColor
+        /// 配置背景色
+        let config = EVExpanderViewCellHolder.cellConfiguration
+        if let selectedColor = config?.selectedBackgroundColor, indexPath.row == EVExpanderViewCellHolder.currentSelectedIndex {
+            cell.contentView.backgroundColor = selectedColor
+        } else {
+            cell.contentView.backgroundColor = EVExpanderViewCellHolder.cellConfiguration.backgroundColor
+        }
 
         /// 创建标题
         if cell.titleLabel == nil {
@@ -328,7 +334,13 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
         return cell
     }
 
-    internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        /// 如果设置了选中a颜色，则改变选中的cell的背景色
+        if let _ = EVExpanderViewCellHolder.cellConfiguration.selectedBackgroundColor {
+            EVExpanderViewCellHolder.currentSelectedIndex = indexPath.row
+            collectionView.reloadData()
+        }
+        /// 回调触发
         guard let handler = EVExpanderViewCellHolder.selectedItemHandler else { return }
         handler(indexPath.row)
     }

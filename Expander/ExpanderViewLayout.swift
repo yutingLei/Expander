@@ -60,6 +60,9 @@ public class EVExpanderViewCellConfiguration: UICollectionViewFlowLayout {
     /// 内容视图的背景色，默认白色
     public var backgroundColor: UIColor = .white
 
+    /// 选中后的背景色，不设置表示选中前后一致
+    public var selectedBackgroundColor: UIColor?
+
     /// 初始化
     public override init() {
         super.init()
