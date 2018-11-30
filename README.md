@@ -110,10 +110,15 @@ carthage update --platform iOS
 	
 	```swift
 	/// 1. 使用自定义配置的方式
-	expanderView.applyImageTitles(datas, cellConfiguration: config, withKeys: getValueKeys)
+	expanderView.applyImageTitles(datas, cellConfiguration: config, withKeys: getValueKeys) 
+	{ (index) in
+		print("当前选择的下标为: \(index)")
+    }
 	
 	/// 2. 使用默认配置，可以忽略cellConfiguration这个参数
-	expanderView.applyImageTitles(datas, withKeys: getValueKeys)
+	expanderView.applyImageTitles(datas, withKeys: getValueKeys) { index in
+		print("当前选择的下标为: \(index)")
+	}
 	```
 
 ## Classes

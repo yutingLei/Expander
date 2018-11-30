@@ -203,13 +203,17 @@ public extension EVExpanderView {
 /// 显示Cell扩展
 extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
 
+    /// 定义回调closure
+    public typealias EVSelectedItemHandler = (Int) -> Void
+
     /// 保存数据
-    public struct EVExpanderViewCellHolder {
+    internal struct EVExpanderViewCellHolder {
         static var model = "title-image"
         static var getValueKeys: [String]!
         static var dataSource: [[String: Any]]!
         static var collectionView: UICollectionView?
         static var cellConfiguration: EVExpanderViewCellConfiguration!
+        static var selectedItemHandler: EVSelectedItemHandler?
     }
 
     /// 显示模板视图,图片-标题
@@ -218,15 +222,18 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
     ///   - datas: 数据数组
     ///   - cellConfiguration: 模板cell视图配置
     ///   - keys: 取的标题和图片名称的key值
+    ///   - block: 点击cell回调函数，index为点击cell坐在数组中的下标
     public func applyImageTitles(_ datas: [[String: Any]],
                                  cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
-                                 withKeys keys: [String])
+                                 withKeys keys: [String],
+                                 didSelectItem handler: EVSelectedItemHandler? = nil)
     {
         /// 是否有数据
         guard datas.count != 0 else { return }
         EVExpanderViewCellHolder.model = "image-title"
         EVExpanderViewCellHolder.dataSource = datas
         EVExpanderViewCellHolder.getValueKeys = keys
+        EVExpanderViewCellHolder.selectedItemHandler = handler
         applyDatas(with: cellConfiguration)
     }
 
@@ -236,15 +243,18 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
     ///   - datas: 数据数组
     ///   - cellConfiguration: 模板cell视图配置
     ///   - keys: 取的标题和图片名称的key值
+    ///   - block: 点击cell回调函数，index为点击cell坐在数组中的下标
     public func applyTitleImages(_ datas: [[String: Any]],
                                  cellConfiguration: EVExpanderViewCellConfiguration = EVExpanderViewCellConfiguration(),
-                                 withKeys keys: [String])
+                                 withKeys keys: [String],
+                                 didSelectItem handler: EVSelectedItemHandler? = nil)
     {
         /// 是否有数据
         guard datas.count != 0 else { return }
         EVExpanderViewCellHolder.model = "title-image"
         EVExpanderViewCellHolder.dataSource = datas
         EVExpanderViewCellHolder.getValueKeys = keys
+        EVExpanderViewCellHolder.selectedItemHandler = handler
         applyDatas(with: cellConfiguration)
     }
 
@@ -316,6 +326,11 @@ extension EVExpanderView: UICollectionViewDataSource, UICollectionViewDelegate {
         cell.imageView?.image = EVExpanderHelp.generateImage(by: data[EVExpanderViewCellHolder.getValueKeys[1]] as? String)
 
         return cell
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let handler = EVExpanderViewCellHolder.selectedItemHandler else { return }
+        handler(indexPath.row)
     }
 }
 
