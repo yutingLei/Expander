@@ -37,9 +37,14 @@ internal class EHelp {
     ///
     /// - Parameter name: 图片名称，若图片不存在，则获取占位图
     /// - Returns: 返回图片对象，获取失败则为nil
-    internal static func generateImage(by name: String?) -> UIImage? {
+    internal static func generateImage(by obj: Any?) -> UIImage? {
+        /// Obj is already an image
+        if let image = obj as? UIImage {
+            return image
+        }
+
         /// 根据传入的图片名称生成图片
-        if let name = name, let image = UIImage(named: name) {
+        if let name = obj as? String, let image = UIImage(named: name) {
             return image
         }
 

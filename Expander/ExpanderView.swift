@@ -50,6 +50,12 @@ public class EView: UIView {
         addSubview(view)
         return view
     }()
+
+    deinit {
+        EViewDataHolder.datas = nil
+        EViewDataHolder.config = nil
+        EViewDataHolder.collectionView = nil
+    }
 }
 
 /// Some functions that can be invoked
@@ -112,10 +118,62 @@ public extension EView {
             self._isExpanded = false
         }
     }
+
+
+    /// Show datas
+    ///
+    /// - Parameters:
+    ///   - datas: Datas array
+    ///   - config: The collection view and cells configuration
+    public func showDatas(_ datas: [[String: Any]], with config: EViewDatasourceConfig, whileCellSelect cellSelectHandler: EViewCellSelectHandler? = nil) {
+
+        guard datas.count != 0 else {
+            print("The count of datas equal 0.")
+            return
+        }
+
+        guard config.valueByKeys.count >= 2 else {
+            print("the count of array(valueByKeys) less than 2, it's invalidete")
+            return
+        }
+
+        /// Save datas
+        EViewDataHolder.datas = datas
+        EViewDataHolder.config = config
+        EViewDataHolder.cellSelectHandler = cellSelectHandler
+
+        /// Init layout
+        var layout = config.layout
+        if layout == nil {
+            layout = UICollectionViewFlowLayout()
+            layout?.itemSize = CGSize(width: contentView.bounds.height, height: contentView.bounds.height)
+            layout?.scrollDirection = .horizontal
+            layout?.minimumLineSpacing = 4
+            layout?.minimumInteritemSpacing = 4
+            EViewDataHolder.collectionView?.collectionViewLayout = layout!
+        }
+
+        /// Init collectionView
+        if EViewDataHolder.collectionView == nil {
+
+            EViewDataHolder.collectionView = UICollectionView(frame: contentView.bounds, collectionViewLayout: layout!)
+            EViewDataHolder.collectionView?.backgroundColor = UIColor.rgb(245, 245, 245)
+            EViewDataHolder.collectionView?.dataSource = self
+            EViewDataHolder.collectionView?.delegate = self
+            contentView.addSubview(EViewDataHolder.collectionView!)
+
+            /// Register cell
+            EViewDataHolder.collectionView?.register(EViewCell.self, forCellWithReuseIdentifier: "com.expander.cell")
+        }
+
+        /// Reload data
+        EViewDataHolder.collectionView?.reloadData()
+    }
 }
 
 //MARK: - Private functions
 fileprivate extension EView {
+
     /// Apply new config.
     func updateConfig(with newValue: EViewConfig) {
 
@@ -210,15 +268,81 @@ fileprivate extension EView {
 
 ///// 显示Cell扩展
 extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    /// Typealise
+    public typealias EViewCellSelectHandler = (Int) -> Void
+
+    /// Hold some vars
+    struct EViewDataHolder {
+        static var datas: [[String: Any]]?
+        static var config: EViewDatasourceConfig?
+        static var collectionView: UICollectionView?
+        static var cellSelectHandler: EViewCellSelectHandler?
+    }
+
+    /// The collection view which show datas
+    public var collectionView: UICollectionView {
+        get { return EViewDataHolder.collectionView! }
+    }
+
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return EViewDataHolder.datas?.count ?? 0
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.expander.cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.expander.cell", for: indexPath) as! EViewCell
+        let cellMode = EViewDataHolder.config!.mode
+        cell.contentView.backgroundColor = EViewDataHolder.config?.backgroundColor
+
+        /// Data
+        let data = EViewDataHolder.datas![indexPath.row]
+        let keys = EViewDataHolder.config!.valueByKeys!
+
+        /// Title label
+        if cell.titleLabel == nil {
+            let y = cellMode == .titleImage ? 0 : cell.contentView.bounds.height - 20
+            let w = cell.contentView.bounds.height
+            cell.titleLabel = UILabel(frame: CGRect(x: 0, y: y, width: w, height: 20))
+            cell.titleLabel?.textColor = .gray
+            cell.titleLabel?.textAlignment = .center
+            cell.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            cell.contentView.addSubview(cell.titleLabel!)
+        }
+        cell.titleLabel?.text = data[keys[0]] as? String
+
+        /// Image view
+        if cell.imageView == nil {
+            let y: CGFloat = cellMode == .titleImage ? 24 : 4
+            let w = cell.contentView.bounds.width - 8
+            let h = cell.contentView.bounds.height - 24
+            cell.imageView = UIImageView(frame: CGRect(x: 4, y: y, width: w, height: h))
+            cell.imageView?.contentMode = .scaleAspectFit
+            cell.contentView.addSubview(cell.imageView!)
+        }
+        cell.imageView?.image = EHelp.generateImage(by: data[keys[1]])
+
         return cell
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    }
+}
+
+/// Custom cell
+fileprivate class EViewCell: UICollectionViewCell {
+
+    /// Title label
+    var titleLabel: UILabel?
+
+    /// Image
+    var imageView: UIImageView?
+
+    /// Init
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

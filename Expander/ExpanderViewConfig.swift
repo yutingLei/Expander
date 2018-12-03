@@ -61,6 +61,43 @@ public struct EViewConfig {
     public init() {}
 }
 
+/// The default cell's configuration
+public class EViewDatasourceConfig {
+
+    /// Cell mode
+    /// titleImage: top title, bottom image
+    /// imageTitle: top image, bottom title
+    public enum EViewCellMode {
+        case titleImage
+        case imageTitle
+    }
+    public var mode: EViewCellMode!
+
+    /// Get values by keys
+    public var valueByKeys: [String]!
+
+    /// The cells layout
+    /// Default:
+    ///         size: w=EView's contentView
+    public var layout: UICollectionViewFlowLayout?
+
+    /// The background color for cell's content view. default is white
+    public var backgroundColor: UIColor!
+
+    /// The selected color for cell's content view. default is rgb(230, 230, 230)
+    public var selectedBackgroundColor: UIColor!
+
+    /// Instance a config
+    ///
+    /// - Parameter valueByKeys: Get value by key
+    public init(keys valueByKeys: [String]!) {
+        self.mode = .titleImage
+        self.valueByKeys = valueByKeys
+        self.backgroundColor = .white
+        self.selectedBackgroundColor = UIColor.rgb(230, 230, 230)
+    }
+}
+
 /// The structure of padding
 public struct EViewPadding: CustomStringConvertible {
     public var description: String {
