@@ -10,7 +10,7 @@ import UIKit
 
 /// 实现物理行为的扩展
 /// 当ExpanderView实现物理行为时，前面设置的一些属性不可用
-public extension EVExpanderView {
+public extension EView {
 
     /// 用于保存扩展中的私有变量
     private struct EVExpanderBehaviorHolder {

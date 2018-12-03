@@ -7,6 +7,18 @@
 //
 import UIKit
 
+internal extension CGSize {
+    static func >(lhs: CGSize, rhs: CGSize) -> Bool {
+        return lhs.width > rhs.width && lhs.height > rhs.height
+    }
+}
+
+internal extension CGRect {
+    static func ==(lhs: CGRect, rhs: CGRect) -> Bool {
+        return lhs.minX == rhs.minX && lhs.minY == rhs.minY && lhs.width == rhs.width && lhs.height == rhs.height
+    }
+}
+
 /// 根据RGB生成颜色
 extension UIColor {
     public class func rgb(_ rgb: CGFloat...) -> UIColor {
@@ -17,9 +29,9 @@ extension UIColor {
 }
 
 /// 获取占位图
-internal class EVExpanderHelp {
+internal class EHelp {
 
-    static let resourcePath = Bundle(for: EVExpanderView.self).path(forResource: "Resources", ofType: "bundle")
+    static let resourcePath = Bundle(for: EView.self).path(forResource: "Resources", ofType: "bundle")
 
     /// 获取资源图片
     ///
