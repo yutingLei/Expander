@@ -7,12 +7,14 @@
 //
 import UIKit
 
+/// Compare CGSize
 internal extension CGSize {
     static func >(lhs: CGSize, rhs: CGSize) -> Bool {
         return lhs.width > rhs.width && lhs.height > rhs.height
     }
 }
 
+/// Compare CGRect
 internal extension CGRect {
     static func ==(lhs: CGRect, rhs: CGRect) -> Bool {
         return lhs.minX == rhs.minX && lhs.minY == rhs.minY && lhs.width == rhs.width && lhs.height == rhs.height
@@ -49,10 +51,22 @@ internal class EHelp {
         }
 
         /// 生成失败，获取占位图
-        if let src = resourcePath {
-            return UIImage(contentsOfFile: src + "/picture.png")
+        if let src = resourcePath, let name = obj as? String {
+            return UIImage(contentsOfFile: src + "/\(name).png")
         }
         return nil
 
+    }
+}
+
+/// Calculate string's size
+internal extension String {
+    func width(_ limitHeight: CGFloat, fontSize: CGFloat = 15) -> CGFloat {
+        let size = CGSize.init(width: CGFloat.infinity, height: limitHeight)
+        let rect = (self as NSString).boundingRect(with: size,
+                                                   options: .truncatesLastVisibleLine,
+                                                   attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)],
+                                                   context: nil)
+        return rect.width
     }
 }

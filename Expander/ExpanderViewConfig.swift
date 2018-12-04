@@ -62,54 +62,61 @@ public struct EViewConfig {
 }
 
 /// The default cell's configuration
-public class EViewDatasourceConfig {
+public class EViewCellConfig {
 
-    /// Cell mode
-    /// titleImage: top title, bottom image
-    /// imageTitle: top image, bottom title
+    /// The cell's mode to decide which style will be used to layout subviews
+    ///
+    /// - `default`: Top with a title label, bottom with an image view
+    /// - classic: Top with an image view, bottom with a title label
     public enum EViewCellMode {
-        case titleImage
-        case imageTitle
+        case `default`
+        case classic
     }
-    public var mode: EViewCellMode!
+    public var mode: EViewCellMode = .`default`
 
-    /// Get values by keys
+    /// If multiple select. default is false
+    public var isMultiSelect: Bool = false {
+        willSet {
+            sureTitle = sureTitle ?? "Sure"
+            selectedImage = selectedImage ?? (newValue ? EHelp.generateImage(by: "e-correct") : nil)
+        }
+    }
+
+    /// The title for sure button (only support multiple select)
+    public var sureTitle: String?
+    /// The sure button has clicked.
+    public var multiSelectedHandler: (([Int]) -> Void)?
+
+    /// The cell's background color. default is white
+    public var backgroundColor: UIColor = .white
+
+    /// The cell's background color when selected
+    /// Only isMultiSelect is false.
+    public var selectedBackgroundColor: UIColor?
+
+    /// The image will be shown on the cell's content view when selected
+    /// Only isMultiSelect is true. then ignore selectedBackgroundColor
+    public var selectedImage: UIImage?
+
+    /// Get title label's text and image view's image or image name
+    /// The first key must for title, and the second key must for image
     public var valueByKeys: [String]!
 
     /// The cells layout
     /// Default:
-    ///         size: w=EView's contentView
+    ///         size: w=EView's contentView=h
     public var layout: UICollectionViewFlowLayout?
-
-    /// The background color for cell's content view. default is white
-    public var backgroundColor: UIColor!
-
-    /// The selected color for cell's content view. default is rgb(230, 230, 230)
-    public var selectedBackgroundColor: UIColor!
 
     /// Instance a config
     ///
     /// - Parameter valueByKeys: Get value by key
     public init(keys valueByKeys: [String]!) {
-        self.mode = .titleImage
         self.valueByKeys = valueByKeys
-        self.backgroundColor = .white
-        self.selectedBackgroundColor = UIColor.rgb(230, 230, 230)
     }
 }
 
 /// The structure of padding
-public struct EViewPadding: CustomStringConvertible {
-    public var description: String {
-        get {
-            return """
-            top:    \(self.top)
-            left:   \(self.left)
-            right:  \(self.right)
-            bottom: \(self.bottom)
-            """
-        }
-    }
+public struct EViewPadding {
 
     /// Top, Left, Bottom, Right
     public var top: CGFloat = 0

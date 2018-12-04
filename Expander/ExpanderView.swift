@@ -55,6 +55,8 @@ public class EView: UIView {
         EViewDataHolder.datas = nil
         EViewDataHolder.config = nil
         EViewDataHolder.collectionView = nil
+        EViewDataHolder.cellSelectHandler = nil
+        EViewDataHolder.multipleCellSelected = nil
     }
 }
 
@@ -103,11 +105,13 @@ public extension EView {
             self.controlButton!.frame.size = CGSize(width: 80, height: 30)
         }) {[unowned self] _ in
             self._isExpanded = true
+            EViewDataHolder.completionButton?.isHidden = !self.hasSelected(in: EViewDataHolder.multipleCellSelected!)
         }
     }
 
     /// Fold EView
     public func fold() {
+        EViewDataHolder.completionButton?.isHidden = true
         UIView.animate(withDuration: 0.35, animations: {
             self.layer.cornerRadius = min(self._originalFrame.width, self._originalFrame.height) / 2
             self.frame = self._originalFrame
@@ -125,7 +129,7 @@ public extension EView {
     /// - Parameters:
     ///   - datas: Datas array
     ///   - config: The collection view and cells configuration
-    public func showDatas(_ datas: [[String: Any]], with config: EViewDatasourceConfig, whileCellSelect cellSelectHandler: EViewCellSelectHandler? = nil) {
+    public func showDatas(_ datas: [[String: Any]], with config: EViewCellConfig, whileCellSelect cellSelectHandler: EViewCellSelectHandler? = nil) {
 
         guard datas.count != 0 else {
             print("The count of datas equal 0.")
@@ -133,7 +137,7 @@ public extension EView {
         }
 
         guard config.valueByKeys.count >= 2 else {
-            print("the count of array(valueByKeys) less than 2, it's invalidete")
+            print("The valueByKeys must contain two keys.")
             return
         }
 
@@ -141,6 +145,9 @@ public extension EView {
         EViewDataHolder.datas = datas
         EViewDataHolder.config = config
         EViewDataHolder.cellSelectHandler = cellSelectHandler
+
+        /// Single or multiple select
+        EViewDataHolder.multipleCellSelected = [Bool](repeating: false, count: datas.count)
 
         /// Init layout
         var layout = config.layout
@@ -164,6 +171,27 @@ public extension EView {
 
             /// Register cell
             EViewDataHolder.collectionView?.register(EViewCell.self, forCellWithReuseIdentifier: "com.expander.cell")
+        }
+
+        /// Init a button to control selected datas
+        if config.isMultiSelect && EViewDataHolder.completionButton == nil {
+            let button = UIButton()
+            button.isHidden = true
+            button.setTitle(config.sureTitle!, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.addTarget(self, action: #selector(sureAction), for: .touchUpInside)
+            EViewDataHolder.completionButton = button
+            addSubview(button)
+
+            button.layer.cornerRadius = 5
+            button.backgroundColor = UIColor.rgb(76, 165, 75)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+            button.translatesAutoresizingMaskIntoConstraints = false
+
+            addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: button, attribute: .trailing, multiplier: 1, constant: 8))
+            addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 2))
+            addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 26))
+            addConstraint(NSLayoutConstraint(item: button, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: config.sureTitle!.width(26) + 10))
         }
 
         /// Reload data
@@ -264,9 +292,30 @@ fileprivate extension EView {
     @objc func controlAction() {
         _isExpanded ? fold() : expand()
     }
+
+    /// Click `Sure` button
+    @objc private func sureAction() {
+        guard let handler = EViewDataHolder.config?.multiSelectedHandler else { return }
+        var selectedIndexes = [Int]()
+        for idx in 0..<EViewDataHolder.multipleCellSelected!.count {
+            if EViewDataHolder.multipleCellSelected![idx] {
+                selectedIndexes += [idx]
+            }
+        }
+        handler(selectedIndexes)
+    }
+
+    /// Whether has selected
+    func hasSelected(in arr: [Bool]) -> Bool {
+        var hasSelected = false
+        for value in arr {
+            if value { hasSelected = true }
+        }
+        return hasSelected
+    }
 }
 
-///// 显示Cell扩展
+//MARK: About Cell
 extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
 
     /// Typealise
@@ -275,12 +324,14 @@ extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
     /// Hold some vars
     struct EViewDataHolder {
         static var datas: [[String: Any]]?
-        static var config: EViewDatasourceConfig?
+        static var config: EViewCellConfig?
         static var collectionView: UICollectionView?
         static var cellSelectHandler: EViewCellSelectHandler?
+        static var multipleCellSelected: [Bool]?
+        static var completionButton: UIButton?
     }
 
-    /// The collection view which show datas
+    /// The collection view used to show datas
     public var collectionView: UICollectionView {
         get { return EViewDataHolder.collectionView! }
     }
@@ -291,40 +342,60 @@ extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "com.expander.cell", for: indexPath) as! EViewCell
-        let cellMode = EViewDataHolder.config!.mode
-        cell.contentView.backgroundColor = EViewDataHolder.config?.backgroundColor
+        let cellConfig = EViewDataHolder.config
+        let cellMode = cellConfig!.mode
 
         /// Data
         let data = EViewDataHolder.datas![indexPath.row]
         let keys = EViewDataHolder.config!.valueByKeys!
 
         /// Title label
-        if cell.titleLabel == nil {
-            let y = cellMode == .titleImage ? 0 : cell.contentView.bounds.height - 20
-            let w = cell.contentView.bounds.height
-            cell.titleLabel = UILabel(frame: CGRect(x: 0, y: y, width: w, height: 20))
-            cell.titleLabel?.textColor = .gray
-            cell.titleLabel?.textAlignment = .center
-            cell.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            cell.contentView.addSubview(cell.titleLabel!)
+        if cell.titleLabel.frame == CGRect.zero {
+            let y = cellMode == .`default` ? 0 : cell.contentView.bounds.height - 20
+            cell.titleLabel.frame.origin.y = y
         }
-        cell.titleLabel?.text = data[keys[0]] as? String
+        cell.titleLabel.text = data[keys[0]] as? String
 
         /// Image view
-        if cell.imageView == nil {
-            let y: CGFloat = cellMode == .titleImage ? 24 : 4
-            let w = cell.contentView.bounds.width - 8
-            let h = cell.contentView.bounds.height - 24
-            cell.imageView = UIImageView(frame: CGRect(x: 4, y: y, width: w, height: h))
-            cell.imageView?.contentMode = .scaleAspectFit
-            cell.contentView.addSubview(cell.imageView!)
+        if cell.imageView.frame == CGRect.zero {
+            cell.imageView.frame.origin.y = cellMode == .`default` ? 24 : 4
         }
-        cell.imageView?.image = EHelp.generateImage(by: data[keys[1]])
+        cell.imageView.image = EHelp.generateImage(by: data[keys[1]])
 
+        /// Single or multiple select
+        if cellConfig!.isMultiSelect {
+            cell.selectedView.superview?.isHidden = !EViewDataHolder.multipleCellSelected![indexPath.row]
+            cell.selectedView.image = cellConfig?.selectedImage
+        } else {
+            if let selectedColor = cellConfig?.selectedBackgroundColor {
+                let isSelected = EViewDataHolder.multipleCellSelected![indexPath.row]
+                cell.contentView.backgroundColor = isSelected ? selectedColor : cellConfig?.backgroundColor
+            }
+        }
         return cell
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        /// is Single select
+        if !EViewDataHolder.config!.isMultiSelect {
+            /// Handle select
+            if let handler = EViewDataHolder.cellSelectHandler {
+                handler(indexPath.row)
+            }
+
+            guard let _ = EViewDataHolder.config?.selectedBackgroundColor else { return }
+            EViewDataHolder.multipleCellSelected = [Bool](repeating: false, count: EViewDataHolder.datas!.count)
+            EViewDataHolder.multipleCellSelected?[indexPath.row] = true
+        } else {
+            /// is multiple selecte
+            let isSelected = EViewDataHolder.multipleCellSelected![indexPath.row]
+            EViewDataHolder.multipleCellSelected?[indexPath.row] = !isSelected
+
+            /// Whether show completion button
+            EViewDataHolder.completionButton?.isHidden = !hasSelected(in: EViewDataHolder.multipleCellSelected!)
+        }
+        collectionView.reloadData()
     }
 }
 
@@ -332,14 +403,40 @@ extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
 fileprivate class EViewCell: UICollectionViewCell {
 
     /// Title label
-    var titleLabel: UILabel?
+    lazy var titleLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: 20))
+        label.textColor = UIColor.rgb(45, 45, 45)
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        contentView.addSubview(label)
+        return label
+    }()
 
     /// Image
-    var imageView: UIImageView?
+    lazy var imageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect(x: 4, y: 20, width: frame.width - 8, height: frame.height - 24))
+        imageView.contentMode = .scaleAspectFit
+        contentView.addSubview(imageView)
+        return imageView
+    }()
+
+    /// Selected image. support only multiple selecte
+    lazy var selectedView: UIImageView = {
+        let selectedView = UIView(frame: bounds)
+        selectedView.backgroundColor = UIColor.white.withAlphaComponent(0.85)
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: bounds.width / 2, height: bounds.height / 2))
+        imageView.center = selectedView.center
+        imageView.contentMode = .scaleAspectFit
+        selectedView.addSubview(imageView)
+        contentView.addSubview(selectedView)
+        bringSubviewToFront(selectedView)
+        return imageView
+    }()
 
     /// Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.backgroundColor = .white
     }
 
     required init?(coder aDecoder: NSCoder) {
