@@ -187,7 +187,7 @@ Show datas.
 eView.showDatas(datas, with: config) { idx in print("Current select: \(idx)")}
 ```
 
-## [Demo](./demo.md)
+## [Demo](https://github.com/yutingLei/Expander/blob/master/DEMO.md)
 
 
 
