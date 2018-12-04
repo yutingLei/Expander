@@ -331,11 +331,6 @@ extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
         static var completionButton: UIButton?
     }
 
-    /// The collection view used to show datas
-    public var collectionView: UICollectionView {
-        get { return EViewDataHolder.collectionView! }
-    }
-
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return EViewDataHolder.datas?.count ?? 0
     }
