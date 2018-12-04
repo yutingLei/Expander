@@ -100,7 +100,7 @@ public class EViewCellConfig {
 
     /// Get title label's text and image view's image or image name
     /// The first key must for title, and the second key must for image
-    public var valueByKeys: [String]!
+    public private(set) var valueByKeys: [String]!
 
     /// The cells layout
     /// Default:

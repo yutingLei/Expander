@@ -168,6 +168,7 @@
 		841DFBB021AD19BF0012DFAB /* ExpanderExample */ = {
 			isa = PBXGroup;
 			children = (
+				842478BF21B675B500DD8BF0 /* Effects */,
 				841646CB21AFCEDA00E01D8F /* flags */,
 				841DFBB121AD19BF0012DFAB /* AppDelegate.swift */,
 				841DFBB321AD19BF0012DFAB /* ViewController.swift */,
@@ -184,6 +185,13 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		842478BF21B675B500DD8BF0 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Effects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

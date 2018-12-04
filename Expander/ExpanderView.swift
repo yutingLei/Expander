@@ -208,7 +208,7 @@ fileprivate extension EView {
         /// Apply new values
         _config.expandType = newValue.expandType ?? .center
         _config.located = newValue.located ?? .left
-        _config.stateFlag = newValue.stateFlag ?? ("Expande", "Fold")
+        _config.stateFlag = newValue.stateFlag ?? ("Expand", "Fold")
         _config.expandCornerRadius = newValue.expandCornerRadius ?? 10
 
         _config.size = newValue.size ?? CGSize(width: 80, height: 80)
