@@ -35,13 +35,13 @@
 		841DFBB721AD19BF0012DFAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB521AD19BF0012DFAB /* Main.storyboard */; };
 		841DFBB921AD19C10012DFAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB821AD19C10012DFAB /* Assets.xcassets */; };
 		841DFBBC21AD19C10012DFAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBBA21AD19C10012DFAB /* LaunchScreen.storyboard */; };
-		841DFBC221AD1CD30012DFAB /* ExpanderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBC121AD1CD30012DFAB /* ExpanderView.swift */; };
-		841DFBC421AD20730012DFAB /* ExpanderSupports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBC321AD20730012DFAB /* ExpanderSupports.swift */; };
-		841DFBC521AD25CB0012DFAB /* ExpanderView.swift in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBC121AD1CD30012DFAB /* ExpanderView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
-		841DFBC621AD25CB0012DFAB /* ExpanderSupports.swift in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBC321AD20730012DFAB /* ExpanderSupports.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		841DFBC221AD1CD30012DFAB /* EView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBC121AD1CD30012DFAB /* EView.swift */; };
+		841DFBC421AD20730012DFAB /* ESupports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBC321AD20730012DFAB /* ESupports.swift */; };
+		841DFBC521AD25CB0012DFAB /* EView.swift in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBC121AD1CD30012DFAB /* EView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		841DFBC621AD25CB0012DFAB /* ESupports.swift in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBC321AD20730012DFAB /* ESupports.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		841DFBC821AD26530012DFAB /* Expander.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841DFBA021AD199D0012DFAB /* Expander.framework */; };
-		8421392821AE3043000DD0FD /* ExpanderViewBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392721AE3043000DD0FD /* ExpanderViewBehavior.swift */; };
-		8421392A21AE7FB6000DD0FD /* ExpanderViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392921AE7FB6000DD0FD /* ExpanderViewConfig.swift */; };
+		8421392821AE3043000DD0FD /* EViewBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392721AE3043000DD0FD /* EViewBehavior.swift */; };
+		8421392A21AE7FB6000DD0FD /* EViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392921AE7FB6000DD0FD /* EViewConfig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,10 +78,10 @@
 		841DFBB821AD19C10012DFAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		841DFBBB21AD19C10012DFAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		841DFBBD21AD19C10012DFAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		841DFBC121AD1CD30012DFAB /* ExpanderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpanderView.swift; sourceTree = "<group>"; };
-		841DFBC321AD20730012DFAB /* ExpanderSupports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpanderSupports.swift; sourceTree = "<group>"; };
-		8421392721AE3043000DD0FD /* ExpanderViewBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpanderViewBehavior.swift; sourceTree = "<group>"; };
-		8421392921AE7FB6000DD0FD /* ExpanderViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpanderViewConfig.swift; sourceTree = "<group>"; };
+		841DFBC121AD1CD30012DFAB /* EView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EView.swift; sourceTree = "<group>"; };
+		841DFBC321AD20730012DFAB /* ESupports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESupports.swift; sourceTree = "<group>"; };
+		8421392721AE3043000DD0FD /* EViewBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EViewBehavior.swift; sourceTree = "<group>"; };
+		8421392921AE7FB6000DD0FD /* EViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EViewConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,10 +156,10 @@
 			children = (
 				841DFBA321AD199D0012DFAB /* Expander.h */,
 				841DFBA421AD199D0012DFAB /* Info.plist */,
-				841DFBC121AD1CD30012DFAB /* ExpanderView.swift */,
-				8421392921AE7FB6000DD0FD /* ExpanderViewConfig.swift */,
-				8421392721AE3043000DD0FD /* ExpanderViewBehavior.swift */,
-				841DFBC321AD20730012DFAB /* ExpanderSupports.swift */,
+				841DFBC121AD1CD30012DFAB /* EView.swift */,
+				8421392921AE7FB6000DD0FD /* EViewConfig.swift */,
+				8421392721AE3043000DD0FD /* EViewBehavior.swift */,
+				841DFBC321AD20730012DFAB /* ESupports.swift */,
 				8416469A21AFBF3D00E01D8F /* Resources.bundle */,
 			);
 			path = Expander;
@@ -201,8 +201,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				841DFBC521AD25CB0012DFAB /* ExpanderView.swift in Headers */,
-				841DFBC621AD25CB0012DFAB /* ExpanderSupports.swift in Headers */,
+				841DFBC521AD25CB0012DFAB /* EView.swift in Headers */,
+				841DFBC621AD25CB0012DFAB /* ESupports.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,10 +330,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				841DFBC421AD20730012DFAB /* ExpanderSupports.swift in Sources */,
-				841DFBC221AD1CD30012DFAB /* ExpanderView.swift in Sources */,
-				8421392821AE3043000DD0FD /* ExpanderViewBehavior.swift in Sources */,
-				8421392A21AE7FB6000DD0FD /* ExpanderViewConfig.swift in Sources */,
+				841DFBC421AD20730012DFAB /* ESupports.swift in Sources */,
+				841DFBC221AD1CD30012DFAB /* EView.swift in Sources */,
+				8421392821AE3043000DD0FD /* EViewBehavior.swift in Sources */,
+				8421392A21AE7FB6000DD0FD /* EViewConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
