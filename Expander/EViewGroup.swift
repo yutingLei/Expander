@@ -10,14 +10,17 @@ import UIKit
 
 public class EViewGroup {
 
-    /// 子视图排列方式，注意：除viewSelf之外，所有子视图的distanceToTop都将被忽略
+    /// Subviews arrangement type. note: except for 'viewSelf', other types
+    /// will ignore the property named 'distanceToTop'
     ///
-    /// - spaceBetween: 所有子视图排列在父视图上下两端
-    /// - spaceAround: 所有子视图按等分排列在父视图中
-    /// - center: 所有子视图从父视图中间向上下两边排列
-    /// - start: 所有子视图从父视图顶部开始排列
-    /// - end: 所有子视图从父视图底部开始排列
-    /// - viewSelf: Group不对子视图排列做任何操作
+    /// - spaceBetween: All views are arranged in equal spacing from the top to the bottom of the parent view,
+    ///                 There is no spacing between top-bottom view with it's parent view
+    /// - spaceAround: All views are arranged in equal spacing from the top to the bottom of the parent view,
+    ///                 There is also have the same spacing between top-bottom view with it's parent view
+    /// - center: All views are arranged from center of the parent view.
+    /// - start: All views are arranged from top of the parent view.
+    /// - end: All views are arranged from bottom of the parent view.
+    /// - viewSelf: Use EView-self layout
     public enum EViewGroupLayout {
         case spaceBetween
         case spaceAround
@@ -27,11 +30,13 @@ public class EViewGroup {
         case viewSelf
     }
 
-    /// EView管理组对子视图展开管理
+    /// Manage how all views are expanded
     ///
-    /// - onlyOne: 同时只能存在一个子视图展开
-    /// - more: 同时可以存在多个子视图展开
-    /// - clever: 智能展开方式，在下一个子视图展开时会计算展开后是否越过父视图边界。越过则会收拢最开始展开的视图，然后展开当前子视图。
+    /// - onlyOne: Only one EView expands at the same time
+    /// - more: Multiple expanded EViews can exist simultaneously
+    /// - clever: In this mode, the expanded view automatically calculates whether
+    ///           the parent view boundary is crossed, if crossed, fold other EView
+    ///           and calculate again until passed.
     public enum EViewGroupExpande {
         case one
         case more
@@ -40,6 +45,8 @@ public class EViewGroup {
 
     //MARK: Private vars
     private var _isFormed = false
+    /// Record the subscript of the expanded view
+    /// It will be used in 'clever' mode.
     private lazy var _expandedViewsIndex: [Int] = {
         return [Int]()
     }()
@@ -48,14 +55,17 @@ public class EViewGroup {
     public private(set) var layout: EViewGroupLayout!
     public private(set) var mode: EViewGroupExpande!
     public private(set) var views: [EView]!
+    /// Spacing between each view
     public var interItemSpacing: CGFloat = 0
 
-    /// 初始化EView管理组
+    /// Initialize the manager with some parameters
+    /// note: required views.cout > 1, and all of the views are must have the same parent view.
     ///
     /// - Parameters:
-    ///   - layout: 子视图排列方式，所有排列方式会按照数组顺序来计算. defautl is '.start'
-    ///   - mode: 子视图在展开时是否能够同时存在
-    ///   - views: 子视图数组
+    ///   - layout: Views arrangement, all the arrangement will be calculated according
+    ///             to the order of the array. defautl is '.start'
+    ///   - mode: Whether subviews can exist simultaneously when expanded
+    ///   - views: The managed views
     public required init(layout: EViewGroupLayout = .start, mode: EViewGroupExpande = .clever, with views: EView...) {
         assert(views.count != 0 && views.count > 1, "The count of views must be greater than 1.")
         assert(isSameParentView(with: views), "All of the views are must have the same parent view.")
@@ -65,6 +75,7 @@ public class EViewGroup {
         self.views = views
     }
 
+    /// Calling this function means that you have already hosted the views.
     public func formed() {
         guard !_isFormed else {
             print("The 'formed' function can only be called once")
@@ -86,7 +97,7 @@ public class EViewGroup {
 
 extension EViewGroup {
 
-    /// 判断视图的父视图是否是同一个视图
+    /// All of the views are must have the same parent view.
     func isSameParentView(with views: [EView]) -> Bool {
         var isSame = true
         var iterator = views.makeIterator()
@@ -99,18 +110,18 @@ extension EViewGroup {
         return isSame
     }
 
-    /// 重新计算子视图位置
+    /// Recalculate the layout of the view according to the mode
     func relayoutViews() {
 
-        /// 如果排列模式是viewSelf，直接返回
+        /// layout == .viewSelf. return directly.
         guard layout != .viewSelf else { return }
 
-        /// 声明常规参数
+        /// Some vars to calculate the layout of the views.
         var startY: CGFloat = 0
         var viewsHeight: CGFloat = 0
         _ = views.map(){ view in viewsHeight += view.height }
 
-        /// 根据排列方式分别计算视图位置
+        /// Start calculate
         switch layout! {
         case .end:
             var maxY: CGFloat = views[0]._parentView.height
@@ -151,34 +162,34 @@ extension EViewGroup {
         }
     }
 
-    /// 扩展或收拢触发函数
+    /// The function will be invoked while touched EView's controlButton
     ///
-    /// - Parameter button: 触发按钮
+    /// - Parameter button: The touched button
     @objc private func viewsControlButtonAction(_ button: UIButton) {
         let eView = button.superview! as! EView
         let idx = (views as NSArray).index(of: eView)
 
-        /// 根据模式展开操作子视图
+        /// Start action
         switch mode! {
         case .one:
 
-            /// 当前展开视图要收拢
+            /// Fold all views
             if eView._isExpanded {
                 for view in views {
                     view.fold()
                 }
             }
 
-            /// 当前视图要展开
+            /// The current EView will be expanded.
             else {
-                /// 获取所有的视图的frame值
+                /// Get all the view's frame
                 var frames = views.map { view in
                     view == eView ? view._expandedFrame! : view._originalFrame!
                 }
 
                 calculateFrames(&frames, viewsIndex: idx)
 
-                /// 展开或收拢
+                /// Decide the action by idx
                 for i in 0..<views.count {
                     if i == idx {
                         views[i].expand(to: frames[i])
@@ -193,7 +204,7 @@ extension EViewGroup {
             frames[idx] = eView._isExpanded ? eView._originalFrame : eView._expandedFrame
             calculateFrames(&frames, viewsIndex: idx)
 
-            /// 展开或收拢
+            /// Decide the action by idx
             for i in 0..<views.count {
                 if i == idx {
                     views[i]._isExpanded ? views[i].fold(to: frames[i]) : views[i].expand(to: frames[i])
@@ -212,7 +223,7 @@ extension EViewGroup {
             calculateFrames(&frames, viewsIndex: idx)
             print("\(_expandedViewsIndex)")
 
-            /// 展开或收拢
+            /// Decide the action by idx
             var indexes = [Int](0..<views.count)
             for index in _expandedViewsIndex {
                 views[index].expand(to: frames[index])
@@ -225,15 +236,13 @@ extension EViewGroup {
         }
     }
 
-    ///
     @discardableResult
     private func calculateFrames(_ frames: inout [CGRect], viewsIndex idx: Int) -> Bool {
-        /// 保存传入的原始frames
+        /// Save the original values
         let originalFrames = frames
         let originalExpandedIndexes = _expandedViewsIndex
 
-        /// 根据当前视图展开的frame值，计算前后所有视图的frame值，避免交叉和越过父视图边界
-        /// 先计算向前的所有视图
+        /// First, calculate the view's 'frame' in front of the current view
         for i in (0..<idx).reversed() {
             let intersect = frames[i].maxY - frames[i + 1].origin.y
             if intersect > 0 {
@@ -243,7 +252,7 @@ extension EViewGroup {
             }
         }
 
-        /// 再计算后向的所有视图
+        /// Then, calculate the view's 'frame' behind the current view
         for i in idx..<views.count {
             if i != views.count - 1 {
                 let intersect = frames[i].maxY - frames[i + 1].origin.y
@@ -255,7 +264,7 @@ extension EViewGroup {
             }
         }
 
-        /// 判断第一个视图是否超过父视图边界
+        /// After calculated, Determine if the first view exceeds the parent view boundary
         if frames[0].origin.y < 0 {
             var startY: CGFloat = 0
             for i in 0..<views.count {
@@ -264,7 +273,7 @@ extension EViewGroup {
             }
         }
 
-        /// 判断最后一个视图是否超过父视图边界
+        /// Determine if the last view exceeds the parent view boundary
         if frames[views.count - 1].maxY > views[0]._parentView.height {
             var startY = views[0]._parentView.height
             for i in (0..<views.count).reversed() {
@@ -277,35 +286,41 @@ extension EViewGroup {
             }
         }
 
-        /// 如果是clever模式
+        /// when mode == .clever, calculate continuous
         guard mode == .clever else { return true }
-        /// 判断是否有视图越过父视图边界
-        /// 因为计算了从最后一个视图越界处理，这里只需要判断第一个视图是否越界即可
+        /// Determine if the first view exceeds the parent view boundary once again
         if frames[0].minY < 0 {
 
-            /// 回退到计算数据之初
+            /// Turn back to original 'frames'
             frames = originalFrames
 
-            /// 如果没有可以收拢的视图，直接返回
+            /// Determine if some view can be folded, if nothing, return directly
             guard _expandedViewsIndex.count != 0 else {
                 print("Not enough space to expand the view.")
                 frames[idx] = views[idx]._originalFrame
                 return false
             }
 
-            /// 还有可以收拢的视图，收拢最早展开的视图，然后再次计算
+            /// If some view can be folded, fold the earliest view and then calculate again
             let i = _expandedViewsIndex.remove(at: 0)
             frames[i] = views[i]._originalFrame
+
+            /// Whether to pass this calculation
             if !calculateFrames(&frames, viewsIndex: idx) {
+                /// NO! turn 'frames' and '_expandedViewsIndex' back to original values
                 frames = originalFrames
                 frames[idx] = views[idx]._originalFrame
                 _expandedViewsIndex = originalExpandedIndexes
                 return false
             }
+
+            /// YES!
         } else {
             if !views[idx]._isExpanded {
+                /// Has enough spacing to expand current view. save idx to _expandedViewsIndex
                 _expandedViewsIndex += [idx]
             } else {
+                /// If fold current view, remove idx from _expandedViewsIndex
                 _expandedViewsIndex.remove(at: (_expandedViewsIndex as NSArray).index(of: idx))
             }
         }
