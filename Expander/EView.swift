@@ -14,19 +14,19 @@ public class EView: UIView {
 
     // MARK: Private vars
     /// The EView's parent view.
-    private weak var _parentView: UIView!
+    internal weak var _parentView: UIView!
 
     /// Save current config
-    private var _config: EViewConfig = EViewConfig()
+    internal var _config: EViewConfig = EViewConfig()
 
     /// The original frame
-    private var _originalFrame: CGRect!
+    internal var _originalFrame: CGRect!
 
     /// The expanded frame
-    private var _expandedFrame: CGRect!
+    internal var _expandedFrame: CGRect!
 
     /// The current state
-    private var _isExpanded = false
+    internal var _isExpanded = false
 
 
     // MARK: Public vars
@@ -96,10 +96,10 @@ public extension EView {
     }
 
     /// Expand EView
-    public func expand() {
+    public func expand(to rect: CGRect? = nil) {
         UIView.animate(withDuration: 0.35, animations: {[unowned self] in
             self.layer.cornerRadius = self._config.expandCornerRadius!
-            self.frame = self._expandedFrame
+            self.frame = rect ?? self._expandedFrame
             self.contentView.alpha = 1
             self.controlButton.isSelected = true
             self.controlButton!.frame.size = CGSize(width: 80, height: 30)
@@ -110,14 +110,14 @@ public extension EView {
     }
 
     /// Fold EView
-    public func fold() {
+    public func fold(to rect: CGRect? = nil) {
         EViewDataHolder.completionButton?.isHidden = true
         UIView.animate(withDuration: 0.35, animations: {
             self.layer.cornerRadius = min(self._originalFrame.width, self._originalFrame.height) / 2
-            self.frame = self._originalFrame
+            self.frame = rect ?? self._originalFrame
             self.contentView.alpha = 0
             self.controlButton.isSelected = false
-            self.controlButton!.frame.size = self._originalFrame.size
+            self.controlButton!.frame.size = (rect ?? self._originalFrame).size
         }) {[unowned self] _ in
             self._isExpanded = false
         }

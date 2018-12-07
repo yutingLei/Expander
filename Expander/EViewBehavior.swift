@@ -13,13 +13,13 @@ import UIKit
 public extension EView {
 
     /// 用于保存扩展中的私有变量
-    private struct EVExpanderBehaviorHolder {
+    internal struct EVExpanderBehaviorHolder {
         static var animator: UIDynamicAnimator?
         static var behavior: EVExpanderBehavior?
     }
 
     /// 物理行为导演者
-    private var _animator: UIDynamicAnimator? {
+    internal var _animator: UIDynamicAnimator? {
         get { return EVExpanderBehaviorHolder.animator }
         set { EVExpanderBehaviorHolder.animator = newValue }
     }

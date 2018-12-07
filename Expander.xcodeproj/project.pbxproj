@@ -42,6 +42,7 @@
 		841DFBC821AD26530012DFAB /* Expander.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841DFBA021AD199D0012DFAB /* Expander.framework */; };
 		8421392821AE3043000DD0FD /* EViewBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392721AE3043000DD0FD /* EViewBehavior.swift */; };
 		8421392A21AE7FB6000DD0FD /* EViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421392921AE7FB6000DD0FD /* EViewConfig.swift */; };
+		84827A8521B8C41700D5CD76 /* EViewGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84827A8421B8C41700D5CD76 /* EViewGroup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 		841DFBC321AD20730012DFAB /* ESupports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESupports.swift; sourceTree = "<group>"; };
 		8421392721AE3043000DD0FD /* EViewBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EViewBehavior.swift; sourceTree = "<group>"; };
 		8421392921AE7FB6000DD0FD /* EViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EViewConfig.swift; sourceTree = "<group>"; };
+		84827A8421B8C41700D5CD76 /* EViewGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EViewGroup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				841DFBA321AD199D0012DFAB /* Expander.h */,
 				841DFBA421AD199D0012DFAB /* Info.plist */,
 				841DFBC121AD1CD30012DFAB /* EView.swift */,
+				84827A8421B8C41700D5CD76 /* EViewGroup.swift */,
 				8421392921AE7FB6000DD0FD /* EViewConfig.swift */,
 				8421392721AE3043000DD0FD /* EViewBehavior.swift */,
 				841DFBC321AD20730012DFAB /* ESupports.swift */,
@@ -332,6 +335,7 @@
 			files = (
 				841DFBC421AD20730012DFAB /* ESupports.swift in Sources */,
 				841DFBC221AD1CD30012DFAB /* EView.swift in Sources */,
+				84827A8521B8C41700D5CD76 /* EViewGroup.swift in Sources */,
 				8421392821AE3043000DD0FD /* EViewBehavior.swift in Sources */,
 				8421392A21AE7FB6000DD0FD /* EViewConfig.swift in Sources */,
 			);
