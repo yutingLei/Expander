@@ -46,6 +46,7 @@ public struct EViewConfig {
     public var distanceToTop: CGFloat?
 
     /// EView's padding
+    /// Default is EVPadding(0, 8)
     public var padding: EViewPadding
 
     //MARK: -
@@ -119,7 +120,7 @@ public class EViewCellConfig {
 
     /// Get title label's text and image view's image or image name
     /// The first key must for title, and the second key must for image
-    public private(set) var valueByKeys: [String]!
+    public private(set) var valueByKeys: [String]
 
     /// The cells layout
     /// Default:

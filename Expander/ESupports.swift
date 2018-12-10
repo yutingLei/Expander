@@ -23,7 +23,7 @@ internal extension CGRect {
 
 /// Generate color with r/g/b
 extension UIColor {
-    public class func rgb(_ rgb: CGFloat...) -> UIColor {
+    internal class func rgb(_ rgb: CGFloat...) -> UIColor {
         assert(rgb.count == 3, "Invalide values of rgb, it must contain three values.")
         let rgbs = rgb.map({ $0 / 255.0 })
         return UIColor(red: rgbs[0], green: rgbs[1], blue: rgbs[2], alpha: 1)

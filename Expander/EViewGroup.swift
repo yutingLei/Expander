@@ -52,9 +52,14 @@ public class EViewGroup {
     }()
 
     //MARK: Public vars
-    public private(set) var layout: EViewGroupLayout!
-    public private(set) var mode: EViewGroupExpande!
-    public private(set) var views: [EView]!
+    /// The layout style for EViews
+    /// Default is `.center`
+    public var layout: EViewGroupLayout
+    /// Decide how many EViews can be shown at simultaneously
+    /// Default is `.one`
+    public var mode: EViewGroupExpande
+    /// The managed EViews
+    public private(set) var views: [EView]
     /// Spacing between each view
     public var interItemSpacing: CGFloat = 0
 
@@ -66,9 +71,9 @@ public class EViewGroup {
     ///             to the order of the array. defautl is '.start'
     ///   - mode: Whether subviews can exist simultaneously when expanded
     ///   - views: The managed views
-    public required init(layout: EViewGroupLayout = .start, mode: EViewGroupExpande = .clever, with views: EView...) {
+    public required init(layout: EViewGroupLayout = .start, mode: EViewGroupExpande = .one, with views: EView...) {
         assert(views.count != 0 && views.count > 1, "The count of views must be greater than 1.")
-        assert(isSameParentView(with: views), "All of the views are must have the same parent view.")
+        assert(EViewGroup.isSameParentView(with: views), "All of the views are must have the same parent view.")
 
         self.layout = layout
         self.mode = mode
@@ -83,12 +88,14 @@ public class EViewGroup {
         }
         _isFormed = true
 
-        /// 根据排列模式，重新组织视图在父视图中的位置
+        /// Relayout EViews
         relayoutViews()
 
-        /// 将视图添加到父视图上并重置触发target
+        /// Add EView to it's parent view and reset target
         for view in views {
-            view._parentView.addSubview(view)
+            if view.superview == nil {
+                view._parentView.addSubview(view)
+            }
             view.controlButton.removeTarget(view, action: nil, for: .touchUpInside)
             view.controlButton.addTarget(self, action: #selector(viewsControlButtonAction(_:)), for: .touchUpInside)
         }
@@ -98,7 +105,7 @@ public class EViewGroup {
 extension EViewGroup {
 
     /// All of the views are must have the same parent view.
-    func isSameParentView(with views: [EView]) -> Bool {
+    class func isSameParentView(with views: [EView]) -> Bool {
         var isSame = true
         var iterator = views.makeIterator()
         _ = iterator.next()
@@ -122,7 +129,7 @@ extension EViewGroup {
         _ = views.map(){ view in viewsHeight += view.height }
 
         /// Start calculate
-        switch layout! {
+        switch layout {
         case .end:
             var maxY: CGFloat = views[0]._parentView.height
             for i in (0..<views.count).reversed() {
@@ -170,7 +177,7 @@ extension EViewGroup {
         let idx = (views as NSArray).index(of: eView)
 
         /// Start action
-        switch mode! {
+        switch mode {
         case .one:
 
             /// Fold all views

@@ -83,7 +83,7 @@ public class EView: UIView {
 //MARK: - Public functions
 public extension EView {
 
-    /// Init an instance of EView by class
+    /// Init an instance of EView by class function
     ///
     /// - Parameter parentView: EView's parent view
     public class func serialization(in parentView: UIView) -> EView {
@@ -397,7 +397,7 @@ extension EView: UICollectionViewDataSource, UICollectionViewDelegate {
 
         /// Data
         let data = EViewDataHolder.datas![indexPath.row]
-        let keys = EViewDataHolder.config!.valueByKeys!
+        let keys = EViewDataHolder.config!.valueByKeys
 
         /// Title label
         if cell.titleLabel.frame == CGRect.zero {
