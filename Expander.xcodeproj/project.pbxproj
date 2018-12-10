@@ -30,7 +30,6 @@
 		841646F521AFCEDA00E01D8F /* SP@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646DF21AFCEDA00E01D8F /* SP@2x.png */; };
 		841646F621AFCEDA00E01D8F /* US@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646E021AFCEDA00E01D8F /* US@2x.png */; };
 		841646F721AFCEDA00E01D8F /* UK@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646E121AFCEDA00E01D8F /* UK@2x.png */; };
-		8417531821BE5D8700C32E03 /* Expander.h in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBA321AD199D0012DFAB /* Expander.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		841DFBB221AD19BF0012DFAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB121AD19BF0012DFAB /* AppDelegate.swift */; };
 		841DFBB421AD19BF0012DFAB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB321AD19BF0012DFAB /* ViewController.swift */; };
 		841DFBB721AD19BF0012DFAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB521AD19BF0012DFAB /* Main.storyboard */; };
@@ -200,7 +199,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8417531821BE5D8700C32E03 /* Expander.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

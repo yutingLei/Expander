@@ -1,6 +1,6 @@
 //
-//  ExpanderViewLayout.swift
-//  Expander
+//  EViewConfig.swift
+//  EViewConfig
 //
 //  Created by yutingLei on 2018/11/28.
 //  Copyright © 2018 Develop. All rights reserved.

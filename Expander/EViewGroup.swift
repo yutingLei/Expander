@@ -1,6 +1,6 @@
 //
 //  EViewGroup.swift
-//  Expander
+//  EViewGroup
 //
 //  Created by yutingLei on 2018/12/6.
 //  Copyright © 2018 Develop. All rights reserved.
