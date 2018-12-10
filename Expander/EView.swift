@@ -98,7 +98,7 @@ public extension EView {
     /// Expand EView
     public func expand(to rect: CGRect? = nil) {
         UIView.animate(withDuration: 0.35, animations: {[unowned self] in
-            self.layer.cornerRadius = self._config.expandCornerRadius!
+            self.layer.cornerRadius = self._config.expandCornerRadius
             self.frame = rect ?? self._expandedFrame
             self.contentView.alpha = 1
             self.controlButton.isSelected = true
@@ -203,64 +203,76 @@ public extension EView {
 fileprivate extension EView {
 
     /// Apply new config.
-    func updateConfig(with newValue: EViewConfig) {
+    func updateConfig(with newConfig: EViewConfig) {
 
         /// Apply new values
-        _config.expandType = newValue.expandType ?? .center
-        _config.located = newValue.located ?? .left
-        _config.stateFlag = newValue.stateFlag ?? ("Expand", "Fold")
-        _config.expandCornerRadius = newValue.expandCornerRadius ?? 10
+        _config.padding = newConfig.padding
+        _config.expandType = newConfig.expandType
+        _config.located = newConfig.located
+        _config.stateFlag = newConfig.stateFlag ?? ("Expand", "Fold")
+        _config.expandCornerRadius = newConfig.expandCornerRadius
 
-        _config.size = newValue.size ?? CGSize(width: 80, height: 80)
-        _config.expandSize = newValue.expandSize ?? CGSize(width: _parentView.bounds.width - 16, height: 120)
-
-        if _config.size! > _config.expandSize! {
-            print("Expanded size less than origianl size. Use default configuration.")
+        /// Set 'size' and 'expandSize'
+        _config.size = newConfig.size
+        var expandWidth = _parentView.bounds.width - newConfig.padding.leftRight()
+        var expandHeight: CGFloat = 120
+        if let expandSize = newConfig.expandSize, expandSize.width >= 0 || expandSize.height >= 0 {
+            expandWidth = expandSize.width >= 0 ? expandSize.width : expandWidth
+            expandHeight = expandSize.height >= 0 ? expandSize.height : expandHeight
+            _config.expandSize = CGSize(width: expandWidth, height: expandHeight)
+        } else {
+            _config.expandSize = CGSize(width: expandWidth, height: expandHeight)
+        }
+        if _config.size > _config.expandSize! {
+            print("The EView's expanded size must be greater than it's folded size. Use default 'size' and 'expandSize'")
+            _config.size = CGSize(width: 80, height: 80)
         }
 
-        _config.padding = newValue.padding ?? EViewPadding(8)
-        _config.distanceToTop = newValue.distanceToTop ?? (_parentView.bounds.height - 80) / 2
+        /// Set 'distanceToTop'
+        if let distanceToTop = newConfig.distanceToTop, distanceToTop >= 0 {
+            _config.distanceToTop = distanceToTop
+        } else {
+            _config.distanceToTop = (_parentView.bounds.height - newConfig.size.height) / 2
+        }
 
         /// set EView's size
-        frame.size = _config.size!
+        frame.size = _config.size
 
         /// calculate EView's origin
-        let ox = _config.located == .left ? _config.padding!.left : _parentView.bounds.width - frame.width - _config.padding!.right
+        let ox = _config.located == .left ? _config.padding.left : _parentView.bounds.width - frame.width - _config.padding.right
         let oy = _config.distanceToTop!
         frame.origin = CGPoint(x: ox, y: oy)
         _originalFrame = frame
 
         /// calculate EView's expanded frame
-        let paddingl = _config.padding!.left
-        let paddingr = _config.padding!.right
-        let ew = _config.expandSize!.width
-        let eh = _config.expandSize!.height
-        let ex = _config.located == .left ? paddingl : _parentView.bounds.width - ew - paddingr
+        let paddingl = _config.padding.left
+        let paddingr = _config.padding.right
+        let ex = _config.located == .left ? paddingl : _parentView.bounds.width - expandWidth - paddingr
         var ey: CGFloat = 0
-        switch _config.expandType! {
+        switch _config.expandType {
         case .up:
-            ey = frame.maxY - eh
-            if ey < _config.padding!.top {
-                ey = _config.padding!.top
+            ey = frame.maxY - expandHeight
+            if ey < _config.padding.top {
+                ey = _config.padding.top
             }
         case .down:
             ey = frame.minY
-            if ey + eh > _parentView.frame.height - _config.padding!.bottom {
-                ey = _parentView.frame.height - _config.padding!.bottom - eh
+            if ey + expandHeight > _parentView.frame.height - _config.padding.bottom {
+                ey = _parentView.frame.height - _config.padding.bottom - expandHeight
             }
         default:
-            ey = frame.midY - eh / 2
+            ey = frame.midY - expandHeight / 2
             if ey <= 0 {
-                ey = _config.padding!.top
+                ey = _config.padding.top
             }
             if ey > _parentView.bounds.height {
                 ey = _parentView.bounds.height - _config.expandSize!.height
             }
         }
-        _expandedFrame = CGRect(x: ex, y: ey, width: ew, height: eh)
+        _expandedFrame = CGRect(x: ex, y: ey, width: expandWidth, height: expandHeight)
 
         /// Set corner radius
-        layer.cornerRadius = min(_config.size!.width, _config.size!.height) / 2
+        layer.cornerRadius = min(_config.size.width, _config.size.height) / 2
 
         /// Update control button
         updateControlButton()
@@ -270,7 +282,7 @@ fileprivate extension EView {
     func updateControlButton() {
 
         /// Update frame
-        controlButton.frame = CGRect(origin: CGPoint.zero, size: _config.size!)
+        controlButton.frame = CGRect(origin: CGPoint.zero, size: _config.size)
 
         /// Set control button
         let expandFlag = _config.stateFlag!.0

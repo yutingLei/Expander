@@ -29,36 +29,51 @@ public struct EViewConfig {
 
     //MARK: The view's layout
     /// View's size, origin size, default 80x80
-    public var size: CGSize?
+    public var size: CGSize
 
     /// View's size, but is Expanded Size.
-    /// Default: w=superview.w - padding.left/right, h=120
+    /// Default: width=superview.w - padding.left/right, height=120
+    /// Note: if width less than 0, use default width
+    ///       if height less than 0, use default height
     public var expandSize: CGSize?
 
     /// Corner radius for expanded state. default 10
-    public var expandCornerRadius: CGFloat?
+    public var expandCornerRadius: CGFloat
 
     /// The offset of EView from the top of its superview.
     /// It means EView's frame.origin.y
+    /// If nil or less than 0, EView will be centered(axis y) in parent view
     public var distanceToTop: CGFloat?
 
     /// EView's padding
-    public var padding: EViewPadding?
+    public var padding: EViewPadding
 
     //MARK: -
     /// which style will be choosed when expanding
     /// Default: .center
-    public var expandType: EViewExpandType?
+    public var expandType: EViewExpandType
 
     /// Situated in parent view
-    public var located: EViewLocated?
+    /// Default: .left
+    public var located: EViewLocated
 
     /// The title/image of state
     /// First param: The title/image in folded state
     /// Second param: The title/image in expanded state
     public var stateFlag: (Any, Any)?
 
-    public init() {}
+    public init(size: CGSize = CGSize(width: 80, height: 80),
+                expandCornerRadius: CGFloat = 10,
+                padding: EViewPadding = EViewPadding(0, 8),
+                expandType: EViewExpandType = .center,
+                located: EViewLocated = .left)
+    {
+        self.size = size
+        self.padding = padding
+        self.located = .left
+        self.expandType = expandType
+        self.expandCornerRadius = expandCornerRadius
+    }
 }
 
 /// The default cell's configuration
@@ -75,7 +90,7 @@ public class EViewCellConfig {
     public var mode: EViewCellMode = .`default`
 
     /// If multiple select. default is false
-    public var isMultiSelect: Bool = false {
+    public var isMultiSelect: Bool {
         willSet {
             sureTitle = sureTitle ?? "Sure"
             selectedImage = selectedImage ?? (newValue ? EHelp.generateImage(by: "e-correct") : nil)
@@ -110,8 +125,9 @@ public class EViewCellConfig {
     /// Instance a config
     ///
     /// - Parameter valueByKeys: Get value by key
-    public init(keys valueByKeys: [String]!) {
+    public init(keys valueByKeys: [String], isMultiSelect: Bool = false) {
         self.valueByKeys = valueByKeys
+        self.isMultiSelect = isMultiSelect
     }
 }
 
@@ -124,7 +140,14 @@ public struct EViewPadding {
     public var bottom: CGFloat = 0
     public var right: CGFloat = 0
 
-    /// init
+    /// Init padding
+    ///
+    /// - Parameter ps: top/left/bottom/right values in order
+    /// Note: if ps.count
+    ///       =1             top/left/bottom/right are equal ps[0]
+    ///       =2             top/bottom equal ps[0], others equal ps[1]
+    ///       =3             top equal ps[0], bottom equal ps[2], others equal ps[1]
+    ///       =4             apply values in order
     public init(_ ps: CGFloat...) {
         switch ps.count {
         case 1:
@@ -141,5 +164,12 @@ public struct EViewPadding {
         default:
             break
         }
+    }
+
+    /// Get paddings of left and right
+    ///
+    /// - Returns: the left + right padding's value
+    public func leftRight() -> CGFloat {
+        return left + right
     }
 }

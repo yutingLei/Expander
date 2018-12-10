@@ -21,7 +21,7 @@ internal extension CGRect {
     }
 }
 
-/// 根据RGB生成颜色
+/// Generate color with r/g/b
 extension UIColor {
     public class func rgb(_ rgb: CGFloat...) -> UIColor {
         assert(rgb.count == 3, "Invalide values of rgb, it must contain three values.")
@@ -30,27 +30,28 @@ extension UIColor {
     }
 }
 
-/// 获取占位图
+/// Get placeholder image
 internal class EHelp {
 
+    /// Resource path
     static let resourcePath = Bundle(for: EView.self).path(forResource: "Resources", ofType: "bundle")
 
-    /// 获取资源图片
+    /// Get image
     ///
-    /// - Parameter name: 图片名称，若图片不存在，则获取占位图
-    /// - Returns: 返回图片对象，获取失败则为nil
+    /// - Parameter name: image name or path
+    /// - Returns: An image object
     internal static func generateImage(by obj: Any?) -> UIImage? {
         /// Obj is already an image
         if let image = obj as? UIImage {
             return image
         }
 
-        /// 根据传入的图片名称生成图片
+        /// Get image by name
         if let name = obj as? String, let image = UIImage(named: name) {
             return image
         }
 
-        /// 生成失败，获取占位图
+        /// Get image by name. internal
         if let src = resourcePath, let name = obj as? String {
             return UIImage(contentsOfFile: src + "/\(name).png")
         }
