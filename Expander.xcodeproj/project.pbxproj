@@ -30,6 +30,9 @@
 		841646F521AFCEDA00E01D8F /* SP@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646DF21AFCEDA00E01D8F /* SP@2x.png */; };
 		841646F621AFCEDA00E01D8F /* US@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646E021AFCEDA00E01D8F /* US@2x.png */; };
 		841646F721AFCEDA00E01D8F /* UK@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 841646E121AFCEDA00E01D8F /* UK@2x.png */; };
+		8417533021BE64FC00C32E03 /* EView.swift in Headers */ = {isa = PBXBuildFile; fileRef = 841DFBC121AD1CD30012DFAB /* EView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		8417533121BE64FC00C32E03 /* EViewGroup.swift in Headers */ = {isa = PBXBuildFile; fileRef = 84827A8421B8C41700D5CD76 /* EViewGroup.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+		8417533221BE64FD00C32E03 /* EViewConfig.swift in Headers */ = {isa = PBXBuildFile; fileRef = 8421392921AE7FB6000DD0FD /* EViewConfig.swift */; settings = {ATTRIBUTES = (Public, ); }; };
 		841DFBB221AD19BF0012DFAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB121AD19BF0012DFAB /* AppDelegate.swift */; };
 		841DFBB421AD19BF0012DFAB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841DFBB321AD19BF0012DFAB /* ViewController.swift */; };
 		841DFBB721AD19BF0012DFAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841DFBB521AD19BF0012DFAB /* Main.storyboard */; };
@@ -199,6 +202,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8417533021BE64FC00C32E03 /* EView.swift in Headers */,
+				8417533121BE64FC00C32E03 /* EViewGroup.swift in Headers */,
+				8417533221BE64FD00C32E03 /* EViewConfig.swift in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +495,7 @@
 		841DFBA921AD199D0012DFAB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -515,6 +522,7 @@
 		841DFBAA21AD199D0012DFAB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
