@@ -129,7 +129,7 @@ public extension EView {
     /// - Parameters:
     ///   - datas: Datas array
     ///   - config: The collection view and cells configuration
-    public func showDatas(_ datas: [[String: Any]], with config: EViewCellConfig, whileCellSelect cellSelectHandler: EViewCellSelectHandler? = nil) {
+    public func showDatas(_ datas: [[String: Any]], with config: EViewCellConfig, whenCellSelect cellSelectHandler: EViewCellSelectHandler? = nil) {
 
         guard datas.count != 0 else {
             print("The count of datas equal 0.")
