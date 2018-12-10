@@ -236,7 +236,7 @@ Is there any property that can be introduced?
 
 
 ## TODO
-- [x] 实现基础功能 
-- [ ] 添加重力感应  
-- [ ] flex创建方式  
+- [x] Basic functions
+- [ ] Add dynamic behaviors?
+- [x] Multiple EViews `EViewGroup`
 
