@@ -187,6 +187,50 @@ Show datas.
 eView.showDatas(datas, with: config) { idx in print("Current select: \(idx)")}
 ```
 
+### I have multiple EViews, what should i do?
+
+Don't worry! The class named [`EViewGroup`](#eviewgroup) might be helpful to you.
+
+*(we are sure that you have some information about EView.)*
+
+Firstly, Suppose we have some EView instances named `eView1`, `eView2`, `eView3`...
+
+Then, create an instance of `EViewGroup`
+
+```swift
+let eGroup = EViewGroup.init(layout: .center, mode: .one, with: eView1, eView2, eView3)
+eGroup.formed()
+```
+ended!?, Indeed, if you don't want to know more.
+
+goes on, How to initialize EViewGroup and what parameters are passed in?
+
+```swift
+/// Initializing EVeiwGroup requires three parameters, but two of them can use the default parameters.
+/// First. use two default params to init
+let eGroup = EViewGroup.init(with: eView1, eView2, eView3)
+
+/// Second. Use one default params to init
+let eGroup = EViewGroup.init(layout: .center, with: eView1, eView2, eView3)
+// or
+let eGroup = EViewGroup.init(mode: .one, with: eView1, eView2, eView3)
+
+/// Third. Use nothing default params to init
+let eGroup = EViewGroup.init(layout: .center, mode: .one, with: eView1, eView2, eView3) 
+```
+What does these parameters mean?
+
+| name | type | description |
+| :--: | :--: | --------- |
+| layout | [EViewGroupLayout](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L24) | Views arrangement, all the arrangement will be calculated according to the order of the array. defautl is '.start' |
+| mode | [EViewGroupExpande](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L40) | Whether EViews can exist simultaneously when expanded |
+
+Is there any property that can be introduced?
+
+| name | type | description |
+| :--: | :--: | --------- |
+| interItemSpacing | CGFloat | Spacing between each view. only supports layouts of `.start`, `.end`, and `.center` |
+
 ## [Demo](https://github.com/yutingLei/Expander/blob/master/DEMO.md)
 
 
