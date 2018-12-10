@@ -40,10 +40,7 @@ public class EView: UIView {
                 return
             }
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeGestureAction(_:)))
-            panGesture.require(toFail: swipeGesture)
             addGestureRecognizer(panGesture)
-            addGestureRecognizer(swipeGesture)
         }
     }
 
@@ -350,6 +347,7 @@ fileprivate extension EView {
         return hasSelected
     }
 
+    /// The response function to PanGesture
     @objc fileprivate func panGestureAction(_ gesture: UIPanGestureRecognizer) {
         guard !_isExpanded else { return }
         switch gesture.state {
@@ -363,10 +361,6 @@ fileprivate extension EView {
         default:
             break
         }
-    }
-    @objc fileprivate func swipeGestureAction(_ gesture: UISwipeGestureRecognizer) {
-        guard !_isExpanded else { return }
-        print("\(#function)")
     }
 }
 
