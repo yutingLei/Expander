@@ -28,6 +28,25 @@ public class EView: UIView {
     /// The current state
     internal var _isExpanded = false
 
+    ///
+    internal var _isViscosity: Bool? {
+        willSet {
+            guard let isViscosity = newValue, isViscosity else {
+                if let viewGestures = gestureRecognizers {
+                    for gesture in viewGestures {
+                        removeGestureRecognizer(gesture)
+                    }
+                }
+                return
+            }
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
+            let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeGestureAction(_:)))
+            panGesture.require(toFail: swipeGesture)
+            addGestureRecognizer(panGesture)
+            addGestureRecognizer(swipeGesture)
+        }
+    }
+
 
     // MARK: Public vars
     /// The view's configuration
@@ -93,6 +112,11 @@ public extension EView {
     /// - Parameter newConfig: the EView's config
     public func applyConfig(_ newConfig: EViewConfig) {
         self.config = newConfig
+
+        /// is viscosity
+        if let isViscosity = newConfig.isViscosity, _isViscosity != isViscosity {
+            _isViscosity = isViscosity
+        }
     }
 
     /// Expand EView
@@ -324,6 +348,25 @@ fileprivate extension EView {
             if value { hasSelected = true }
         }
         return hasSelected
+    }
+
+    @objc fileprivate func panGestureAction(_ gesture: UIPanGestureRecognizer) {
+        guard !_isExpanded else { return }
+        switch gesture.state {
+        case .changed:
+            let position = gesture.location(in: _parentView)
+            center = position
+        case .ended, .failed:
+            UIView.animate(withDuration: 0.25) {[unowned self] in
+                self.frame = self._originalFrame
+            }
+        default:
+            break
+        }
+    }
+    @objc fileprivate func swipeGestureAction(_ gesture: UISwipeGestureRecognizer) {
+        guard !_isExpanded else { return }
+        print("\(#function)")
     }
 }
 

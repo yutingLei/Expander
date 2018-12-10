@@ -62,6 +62,10 @@ public struct EViewConfig {
     /// Second param: The title/image in expanded state
     public var stateFlag: (Any, Any)?
 
+    /// If true, no matter how you move the EView, it will return to the original position after
+    /// the finger is released.
+    public var isViscosity: Bool?
+
     public init(size: CGSize = CGSize(width: 80, height: 80),
                 expandCornerRadius: CGFloat = 10,
                 padding: EViewPadding = EViewPadding(0, 8),
