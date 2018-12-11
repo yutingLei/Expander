@@ -2,102 +2,102 @@
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Platform](https://img.shields.io/badge/platform-iOS-4BC51D.svg) ![Swift](https://img.shields.io/badge/Swift-4.2-4BC51D.svg)
 
+[English](https://github.com/yutingLei/Expander/blob/master/README-En.md)
 
-## Installation
+## 导入
 
-### Carthage
-Install [Carthage](https://github.com/Carthage/Carthage) if need be.
+### 使用Carthage导入
+若未安装[Carthage](https://github.com/Carthage/Carthage)，使用下面方法安装：
 
 ```
 $ brew update
 $ brew install carthage
 ```
 
-Add `Expander` in your `Cartfile`.
+将一下内容添加到`Cartfile`文件中.
 
 ```
 github "yutingLei/Expander" "master"
 ```
 
-Run `carthage` to build the framework and drag the built `Expander.framework` into your Xcode project.
+在命令行中，`cd`到工程根目录，运行`carthage update`命令，将编译好的`Expander.framework`添加到Xcode项目中去。
 
-### Manual
-Copy `Expander` folder to your project. That's it.
-
-_**Note:** If you encounter issues while uploading the app to iTunes Connect, remove the `Info.plist` file in `Expander`._
+### 手动导入
+直接复制`Expander`文件夹到项目中去，并添加到工程中即可.
 
 
-## Usage
 
-Firstly, import `Expaner`.
+## 使用
+
+首先, 在需要的文件中导入`Expaner`.
 
 ```swift
 import Expander
 ```
 
-### Initialization
+### 初始化
 
-Then, there is only one way you can create `EView`:
+使用类方法初始化`EView`实例:
 
 ```swift
-/// The view is the EView's superview
-/// Don't care about memory leak. We used `weak` refrencens when using `view`.
+/// 参数view是EView的父视图
+/// 无需担心交叉强应用，该视图在EView中是weak类型
 let eView = EView.serialization(in: view)
 view.addSubview(eView)
 ```
 
-### Custom config `EView`
-*If you don't like to configure this view, you can skip it directly.*
+### 配置`EView`
+*使用默认的配置可以跳过配置.*
 
-Instance a config object. you should know that the type `EViewConfig` is `struct`.
+实例化配置. *注意：`EViewConfig`是`struct`类型*.
 
 ```swift
 var config = EViewConfig()
 ```
-Configuration properties:
 
-| Property name | Type | Description | Default value |
+可设置的属性:
+
+| 属性名 | 类型 | 描述 | 默认值 |
 | :-----------: | :--: | :--------- | :-----------: |
-| size | CGSize | The original size of EView | `80x80` |
-| expandSize | CGSize | The expanded size of EView | `Optional` |
-| expandCornerRadius | CGFloat | The corner radius when EView expanded | `10` |
-| distanceToTop | CGFloat | The distance to parent view | `Optional` |
-| padding | EViewPadding | Padding to parent view | `EViewPadding(0, 8)` |
-| expandType | [EViewExpandType](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L18) | How style will be used while expanding | `.center` |
-| located | [EViewLocated](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L25) | Arrange EView at it's parent view's left/right  | `.left` |
-| stateFlag | Touple | The text that decide state | `("Expand", "Fold")` |
-| isViscosity | Bool | If true, The EView can be moved and return back original position when released | `Optional` |
+| size | CGSize | EView的原始大小 | `80x80` |
+| expandSize | CGSize | EView扩展后的大小，其中宽度小于0时，使用默认宽度；高度同理 | `Optional` |
+| expandCornerRadius | CGFloat | EView展开后的边角弧度 | `10` |
+| distanceToTop | CGFloat | EView到父视图顶部的距离 | `Optional` |
+| padding | EViewPadding | EView相对父视图的边缘填充 | `EViewPadding(0, 8)` |
+| expandType | [EViewExpandType](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L18) | EView展开时的模式 | `.center` |
+| located | [EViewLocated](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L25) | EView位于父视图的左/右边  | `.left` |
+| stateFlag | Touple | 控制按钮展开/收拢状态的标题 | `("Expand", "Fold")` |
+| isViscosity | Bool | 是否具有粘性，为`true`时，可以移动EView，但在手指松开后会回到原来的位置 | `Optional` |
 
-After configuration, you must call the `applyConfig` function once.
+配置完成后，必须调用一次`applyConfig`函数.
 
 ```swift
 eView.applyConfig(config)
 ```
 
-## Extension
+## 扩展
 
-### I want to control the `Expand` and `Fold` actions myself?
+### 如果我想自己控制EView的展开和收拢怎么办?
 
-There are two methods that can control EView's actions.
+下面两个方法用于展开和收拢
 
 ```swift
-/// Expand action
-/// rect: if you set, replace it with `expandSize`
+/// 展开动作
+/// rect: 如果设置了rect，那么展开后的frame = rect，仅限本次有效
 public func expand(to rect: CGRect? = nil)
-/// Fold action
-/// rect: if you set, replace it with `size`
+/// 收拢动作
+/// rect: 如果设置了rect，那么收拢后的frame = rect，仅限本次有效
 public func fold(to rect: CGRect? = nil)
 ```
 
-### I want to add some views into EView
+### 为EView添加视图
 
-When created `EView`, a property named `contentView` that you can get it.  
-Then, you can add any view into `contentView`.
+当创建`EView`后，可以获取一个`contentView`的属性，此时可以向里面添加任意视图。
 
-### Is there a quick way to display data?
+### 有快速的方法显示数据吗?
 
-Of course, just a little code.  
-Firstly, Suppose array data as follow:
+当然，可以使用默认的显示方式，而这仅需一点代码。  
+首先，假设有以下一个数组:
 
 ```swift
 let datas = [["title": "Gemany", "image": "GM.png"],
@@ -110,85 +110,63 @@ let datas = [["title": "Gemany", "image": "GM.png"],
             ["title": "Singapore", "image": "SP.png"]]
 ```
 
-Init configuration using `EViewCellConfig`:
+初始化cell配置 `EViewCellConfig`:
 
 ```swift
-/// Init config
-/// Note: the first key must be title's key, the second key must be image's key
+/// 初始化配置
+/// 注意：传入的keys是取字典值的key,第一个必须是标题的key，第二个必须是图片的key
 let cellConfig = EViewCellConfig(keys: ["title", "image"])
 ```
 
-Set others properties. *also you can skip it directly.*
+设置一些其它属性. *使用默认的可以跳过设置。*
 
-| Property name | Type | Description | Default value |
+| 属性名 | 类型 | 描述 | 默认值 |
 | :-----------: | :--: | :--------- | :-----------: |
-| mode | [EViewCellMode](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L91) | Decide display style | `.default`, other is `.classic`|
-| isMultiSelect | Bool | multiple select | `false` |
-| sureTitle | String | `isMultiSelect = true`, The sure button's title | `Sure` |
-| multiSelectedHandler | Closure | Call back when `sure` button touched, applied when `isMultiSelect  = true` | `Optional` |
-| backgroundColor | UIColor | The cell's backgroundColor | `.white` |
-| selectedBackgroundColor | UIColor | The cell's backgroundColor when selected | `Optional` |
-| selectedImage | UIImage | Add an image to cell when selected, applied when `isMultiSelect = true` | `Optional` |
-| layout | UICollectionViewFlowLayout | The layout for cells | `Optional` |
+| mode | [EViewCellMode](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L91) | cell的显示模式，`.default`表示上面是标题，下面是图片; `.classic`与之相反 | `.default` |
+| isMultiSelect | Bool | 是否多选 | `false` |
+| sureTitle | String | 确认按钮的标题，仅在`isMultiSelect = true`时有效 | `Sure` |
+| multiSelectedHandler | Closure | 当`isMultiSelect  = true`时，点击确认按钮的回调函数 | `Optional` |
+| backgroundColor | UIColor | 每个cell的背景色 | `.white` |
+| selectedBackgroundColor | UIColor | cell在选中状态下的背景色，需`isMultiSelect = false` | `Optional` |
+| selectedImage | UIImage | 选中状态的图片，仅`isMultiSelect = true`有效 | `Optional` |
+| layout | UICollectionViewFlowLayout | cell的排列方式 | `Optional` |
 
-Show datas.
+调用函数来显示数据:
 
 ```swift
 eView.showDatas(datas, with: config) { idx in print("Current select: \(idx)")}
 ```
 
-### I have multiple EViews, what should i do?
+### 我想控制多个EView,该怎么破?
 
-Don't worry! The class named [`EViewGroup`](#eviewgroup) might be helpful to you.
+别担心！你可以使用[`EViewGroup`](#eviewgroup)这个类.
 
-*(we are sure that you have some information about EView.)*
+假设声明了多个`EView`的实例： `eView1`, `eView2`, `eView3`...
 
-Firstly, Suppose we have some EView instances named `eView1`, `eView2`, `eView3`...
-
-Then, create an instance of `EViewGroup`
+然后我们创建`EViewGroup`管理组
 
 ```swift
 let eGroup = EViewGroup.init(layout: .center, mode: .one, with: eView1, eView2, eView3)
 eGroup.formed()
 ```
-ended!?, Indeed, if you don't want to know more.
+就这样!?, 如果简单使用，两行代码就可以为解决问题。
 
-goes on, How to initialize EViewGroup and what parameters are passed in?
+当然，还有可配置参数（使配置参数生效必须在调用`formed`函数之前）：
 
-```swift
-/// Initializing EVeiwGroup requires three parameters, but two of them can use the default parameters.
-/// First. use two default params to init
-let eGroup = EViewGroup.init(with: eView1, eView2, eView3)
-
-/// Second. Use one default params to init
-let eGroup = EViewGroup.init(layout: .center, with: eView1, eView2, eView3)
-// or
-let eGroup = EViewGroup.init(mode: .one, with: eView1, eView2, eView3)
-
-/// Third. Use nothing default params to init
-let eGroup = EViewGroup.init(layout: .center, mode: .one, with: eView1, eView2, eView3) 
-```
-What does these parameters mean?
-
-| name | type | description |
+| 属性 | 类型 | 描述 |
 | :--: | :--: | --------- |
-| layout | [EViewGroupLayout](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L24) | Views arrangement, all the arrangement will be calculated according to the order of the array. defautl is '.start' |
-| mode | [EViewGroupExpande](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L40) | Whether EViews can exist simultaneously when expanded |
-
-Is there any property that can be introduced?
-
-| name | type | description |
-| :--: | :--: | --------- |
-| interItemSpacing | CGFloat | Spacing between each view. only supports layouts of `.start`, `.end`, and `.center` |
+| layout | [EViewGroupLayout](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L24) | 被管理视图的排列方式 |
+| mode | [EViewGroupExpande](https://github.com/yutingLei/Expander/blob/626d6a73fbfd464f131a10ea6f45b8dc6248418c/Expander/EViewGroup.swift#L40) | 被管理视图同时能够展开个数 |
+| interItemSpacing | CGFloat | 相邻两个EView视图间隔. 只支持`layout = ` `.start`/`.end`/`.center` |
 
 
-## Demo
+## 案例
 
-**[Simple EView and Configurations](https://github.com/yutingLei/Expander/blob/master/simple-eview-demo.md)**
+**[简单的EView使用方法和配置](https://github.com/yutingLei/Expander/blob/master/simple-eview-demo.md)**
 
-**[EView with datas](https://github.com/yutingLei/Expander/blob/master/simple-eview-datas-demo.md)**
+**[使用EView显示数据](https://github.com/yutingLei/Expander/blob/master/simple-eview-datas-demo.md)**
 
-**[EViewGroup](https://github.com/yutingLei/Expander/blob/master/group-eview-demo.md)**
+**[EViewGroup的使用方法](https://github.com/yutingLei/Expander/blob/master/group-eview-demo.md)**
 
 
 ## TODO
