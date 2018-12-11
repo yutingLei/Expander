@@ -41,7 +41,7 @@ Then, there is only one way you can create `EView`:
 
 ```swift
 /// The view is the EView's superview
-/// Don't care about memory leak. use `weak` refrencens when using `view`.
+/// Don't care about memory leak. We used `weak` refrencens when using `view`.
 let eView = EView.serialization(in: view)
 view.addSubview(eView)
 ```
@@ -54,49 +54,21 @@ Instance a config object. you should know that the type `EViewConfig` is `struct
 ```swift
 var config = EViewConfig()
 ```
+Configuration properties:
 
-Set EView's original size. default is `80x80`
+| Property name | Type | Description | Default value |
+| :-----------: | :--: | :--------- | :-----------: |
+| size | CGSize | The original size of EView | `80x80` |
+| expandSize | CGSize | The expanded size of EView | `Optional` |
+| expandCornerRadius | CGFloat | The corner radius when EView expanded | `10` |
+| distanceToTop | CGFloat | The distance to parent view | `Optional` |
+| padding | EViewPadding | Padding to parent view | `EViewPadding(0, 8)` |
+| expandType | [EViewExpandType](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L18) | How style will be used while expanding | `.center` |
+| located | [EViewLocated](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L25) | Arrange EView at it's parent view's left/right  | `.left` |
+| stateFlag | Touple | The text that decide state | `("Expand", "Fold")` |
+| isViscosity | Bool | If true, The EView can be moved and return back original position when released | `Optional` |
 
-```swift
-config.size = CGSize.init(width: <#width#>, height: <#height#>)
-```
-
-Set EView's expanded size. it must greater than original `size`  
-Default is: `height=120`, `width=superviwe's width`
-
-```swift
-config.expandSize = CGSize.init(width: <#width#>, height: <#height#>)
-```
-
-Set others properties.
-
-```swift
-/// The corner radius when EView expanded. Optional
-/// If not set, default is 10
-config.expandCornerRadius = <#radius#>
-
-/// Decide how long distance to superview's top. Optional
-/// If not set, EView's midY = superview.center.y
-config.distanceToTop = <#distance#>
-
-/// Decide padding to superview. Optional
-/// If not set, padding top/left/bottom/right = 8
-config.padding = <#EViewPadding(8)#>
-
-/// Decide which direction will be selected when expanding. Optional
-/// If not set, Default `.center`
-config.expandType = .center
-
-/// Decide where the EView located. Optional
-/// If not set, Default `.left`
-config.located = .left
-
-/// The expand/fold action's title. Optional
-/// If not set, default `(Expand, Fold)`
-config.located = ("展开", "收拢")
-```
-
-Apply configurations.
+After configuration, you must call the `applyConfig` function once.
 
 ```swift
 eView.applyConfig(config)
@@ -104,39 +76,41 @@ eView.applyConfig(config)
 
 ## Extension
 
-### How can i control EView's actions?
+### I want to control the `Expand` and `Fold` actions myself?
 
 There are two methods that can control EView's actions.
 
 ```swift
 /// Expand action
-public func expand()
+/// rect: if you set, replace it with `expandSize`
+public func expand(to rect: CGRect? = nil)
 /// Fold action
-public func fold()
+/// rect: if you set, replace it with `size`
+public func fold(to rect: CGRect? = nil)
 ```
 
-### How to show myself custom view?
+### I want to add some views into EView
 
-When created `EView`, a property named `contentView` that you can got it.  
+When created `EView`, a property named `contentView` that you can get it.  
 Then, you can add any view into `contentView`.
 
-### How to show datas fastly?
+### Is there a quick way to display data?
 
-Firstly, we have an array that contain our datas.
+Of course, just a little code.  
+Firstly, Suppose array data as follow:
 
 ```swift
-let datas = [["title": "德国", "image": "GM.png"],
-            ["title": "印度", "image": "IN.png"],
-            ["title": "日本", "image": "JP.png"],
-            ["title": "朝鲜", "image": "SK.png"],
-            ["title": "荷兰", "image": "NL.png"],
-            ["title": "英国", "image": "UK.png"],
-            ["title": "美国", "image": "US.png"],
-            ["title": "加拿大", "image": "CA.png"],
-            ["title": "新加坡", "image": "SP.png"]]
+let datas = [["title": "Gemany", "image": "GM.png"],
+            ["title": "India", "image": "IN.png"],
+            ["title": "Japan", "image": "JP.png"],
+            ["title": "Netherlands", "image": "NL.png"],
+            ["title": "UK", "image": "UK.png"],
+            ["title": "US", "image": "US.png"],
+            ["title": "Canada", "image": "CA.png"],
+            ["title": "Singapore", "image": "SP.png"]]
 ```
 
-Init configuration with `EViewCellConfig`:
+Init configuration using `EViewCellConfig`:
 
 ```swift
 /// Init config
@@ -144,42 +118,18 @@ Init configuration with `EViewCellConfig`:
 let cellConfig = EViewCellConfig(keys: ["title", "image"])
 ```
 
-Set others properties. also you can skip it directly.
+Set others properties. *also you can skip it directly.*
 
-```swift
-/// The cell's mode to decide which style will be used to layout subviews.
-/// .`default`: top title, bottom image
-/// .classic:   top image, bottom title
-/// If not set, default is .`default`
-cellConfig.mode = .`default`
-
-/// Wether support multiple select.
-/// If not set, default is false
-cellConfig.isMultiSelect = <#Bool-value#>
-
-/// The title for sure button. (Only for multiple select). Optional
-cellConfig.sureTitle = <#title-string#>
-
-/// The sure button's callback when touched. Optional
-cellConfig.multiSelectHandler = { idxs in print("Selected idxs: \(idxs)") }
-
-/// Cell's background color
-/// Default is .white
-cellConfig.backgroundColor = .white
-
-/// Cell's background color when selected. Optioanl
-/// (Only for single select)
-cellConfig.selectedBackgroundColor = <#UIColor#>
-
-/// A image flag for selected cell. Optional
-/// (Only for multiple select)
-cellConfig.selectedImage = <#UIImage#>
-
-/// Layout for cell. Optional
-let layout = UICollectionViewFlowLayout()
-layout...
-cellConfig.layout = layout
-```
+| Property name | Type | Description | Default value |
+| :-----------: | :--: | :--------- | :-----------: |
+| mode | [EViewCellMode](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L91) | Decide display style | `.default`, other is `.classic`|
+| isMultiSelect | Bool | multiple select | `false` |
+| sureTitle | String | `isMultiSelect = true`, The sure button's title | `Sure` |
+| multiSelectedHandler | Closure | Call back when `sure` button touched, applied when `isMultiSelect  = true` | `Optional` |
+| backgroundColor | UIColor | The cell's backgroundColor | `.white` |
+| selectedBackgroundColor | UIColor | The cell's backgroundColor when selected | `Optional` |
+| selectedImage | UIImage | Add an image to cell when selected, applied when `isMultiSelect = true` | `Optional` |
+| layout | UICollectionViewFlowLayout | The layout for cells | `Optional` |
 
 Show datas.
 
@@ -230,6 +180,7 @@ Is there any property that can be introduced?
 | name | type | description |
 | :--: | :--: | --------- |
 | interItemSpacing | CGFloat | Spacing between each view. only supports layouts of `.start`, `.end`, and `.center` |
+
 
 ## [Demo](https://github.com/yutingLei/Expander/blob/master/DEMO.md)
 
