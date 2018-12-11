@@ -75,7 +75,7 @@ public struct EViewConfig {
     {
         self.size = size
         self.padding = padding
-        self.located = .left
+        self.located = located
         self.expandType = expandType
         self.expandCornerRadius = expandCornerRadius
     }

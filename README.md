@@ -182,8 +182,13 @@ Is there any property that can be introduced?
 | interItemSpacing | CGFloat | Spacing between each view. only supports layouts of `.start`, `.end`, and `.center` |
 
 
-## [Demo](https://github.com/yutingLei/Expander/blob/master/DEMO.md)
+## Demo
 
+**[Simple EView and Configurations](https://github.com/yutingLei/Expander/blob/master/simple-eview-demo.md)**
+
+**[EView with datas](https://github.com/yutingLei/Expander/blob/master/simple-eview-datas-demo.md)**
+
+**[EViewGroup](https://github.com/yutingLei/Expander/blob/master/group-eview-demo.md)**
 
 
 ## TODO

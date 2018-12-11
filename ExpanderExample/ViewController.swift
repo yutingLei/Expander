@@ -57,15 +57,15 @@ class ViewController: UIViewController {
         view.addSubview(centerLine)
 
         let view1 = EView.serialization(in: view)
-        var view1Config = EViewConfig()
-        view1Config.located = .right
-        view1Config.expandSize = CGSize.init(width: view.bounds.width - 16, height: 600)
-        view1.applyConfig(view1Config)
+//        var view1Config = EViewConfig()
+//        view1Config.located = .right
+//        view1Config.expandSize = CGSize.init(width: view.bounds.width - 16, height: 200)
+//        view1.applyConfig(view1Config)
 
         let view2 = EView.serialization(in: view)
         let view3 = EView.serialization(in: view)
         let view4 = EView.serialization(in: view)
-        eGroup = EViewGroup.init(layout: .end, mode: .clever, with: view1, view2, view3, view4)
+        eGroup = EViewGroup.init(layout: .center, mode: .one, with: view1, view2, view3, view4)
         eGroup.interItemSpacing = 8
         eGroup.formed()
     }
