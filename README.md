@@ -14,22 +14,23 @@ $ brew update
 $ brew install carthage
 ```
 
-将一下内容添加到`Cartfile`文件中.
+创建`Cartfile`文件并添加以下内容.
 
 ```
 github "yutingLei/Expander" "master"
 ```
 
-在命令行中，`cd`到工程根目录，运行`carthage update`命令，将编译好的`Expander.framework`添加到Xcode项目中去。
+在终端，`cd`到工程根目录，运行`carthage update`命令，将编译好的`Expander.framework`添加到Xcode项目中去。
 
 ### 手动导入
 直接复制`Expander`文件夹到项目中去，并添加到工程中即可.
 
+*可能需要移除`Info.plist`文件，视情况而定。*
 
 
 ## 使用
 
-首先, 在需要的文件中导入`Expaner`.
+首先, 在需要的文件中导入`Expander`.
 
 ```swift
 import Expander
@@ -37,11 +38,11 @@ import Expander
 
 ### 初始化
 
-使用类方法初始化`EView`实例:
+只能使用类方法初始化`EView`实例:
 
 ```swift
 /// 参数view是EView的父视图
-/// 无需担心交叉强应用，该视图在EView中是weak类型
+/// 无需担心交叉强引用，该视图在EView中是weak类型
 let eView = EView.serialization(in: view)
 view.addSubview(eView)
 ```
@@ -59,13 +60,13 @@ var config = EViewConfig()
 
 | 属性名 | 类型 | 描述 | 默认值 |
 | :-----------: | :--: | :--------- | :-----------: |
-| size | CGSize | EView的原始大小 | `80x80` |
+| size | CGSize | EView的初始大小 | `80x80` |
 | expandSize | CGSize | EView扩展后的大小，其中宽度小于0时，使用默认宽度；高度同理 | `Optional` |
 | expandCornerRadius | CGFloat | EView展开后的边角弧度 | `10` |
 | distanceToTop | CGFloat | EView到父视图顶部的距离 | `Optional` |
 | padding | EViewPadding | EView相对父视图的边缘填充 | `EViewPadding(0, 8)` |
-| expandType | [EViewExpandType](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L18) | EView展开时的模式 | `.center` |
-| located | [EViewLocated](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L25) | EView位于父视图的左/右边  | `.left` |
+| expandType | [EViewExpandType](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L18) | EView展开时的模式(或者说是方向) | `.center` |
+| located | [EViewLocated](https://github.com/yutingLei/Expander/blob/d9f57eb52fb4fe9f019bc07290fc62dd89c1a1b3/Expander/EViewConfig.swift#L25) | 决定EView位于父视图的左/右边  | `.left` |
 | stateFlag | Touple | 控制按钮展开/收拢状态的标题 | `("Expand", "Fold")` |
 | isViscosity | Bool | 是否具有粘性，为`true`时，可以移动EView，但在手指松开后会回到原来的位置 | `Optional` |
 
