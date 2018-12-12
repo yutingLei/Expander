@@ -181,7 +181,7 @@ extension EViewGroup {
         case .one:
 
             /// Fold all views
-            if eView._isExpanded {
+            if eView.isExpanded {
                 for view in views {
                     view.fold()
                 }
@@ -207,16 +207,16 @@ extension EViewGroup {
                 }
             }
         case .more:
-            var frames = views.map({ view in view._isExpanded ? view._expandedFrame! : view._originalFrame! })
-            frames[idx] = eView._isExpanded ? eView._originalFrame : eView._expandedFrame
+            var frames = views.map({ view in view.isExpanded ? view._expandedFrame! : view._originalFrame! })
+            frames[idx] = eView.isExpanded ? eView._originalFrame : eView._expandedFrame
             calculateFrames(&frames, viewsIndex: idx)
 
             /// Decide the action by idx
             for i in 0..<views.count {
                 if i == idx {
-                    views[i]._isExpanded ? views[i].fold(to: frames[i]) : views[i].expand(to: frames[i])
+                    views[i].isExpanded ? views[i].fold(to: frames[i]) : views[i].expand(to: frames[i])
                 } else {
-                    if !views[i]._isExpanded {
+                    if !views[i].isExpanded {
                         views[i].contentView.alpha = 0
                         views[i].fold(to: frames[i])
                     } else {
@@ -225,8 +225,8 @@ extension EViewGroup {
                 }
             }
         default:
-            var frames = views.map({ view in view._isExpanded ? view._expandedFrame! : view._originalFrame! })
-            frames[idx] = eView._isExpanded ? eView._originalFrame : eView._expandedFrame
+            var frames = views.map({ view in view.isExpanded ? view._expandedFrame! : view._originalFrame! })
+            frames[idx] = eView.isExpanded ? eView._originalFrame : eView._expandedFrame
             calculateFrames(&frames, viewsIndex: idx)
             print("\(_expandedViewsIndex)")
 
@@ -323,7 +323,7 @@ extension EViewGroup {
 
             /// YES!
         } else {
-            if !views[idx]._isExpanded {
+            if !views[idx].isExpanded {
                 /// Has enough spacing to expand current view. save idx to _expandedViewsIndex
                 _expandedViewsIndex += [idx]
             } else {

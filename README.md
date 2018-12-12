@@ -174,4 +174,5 @@ eGroup.formed()
 - [x] Basic functions
 - [ ] Add dynamic behaviors?
 - [x] Multiple EViews `EViewGroup`
+- [ ] Shadow color
 

@@ -25,9 +25,6 @@ public class EView: UIView {
     /// The expanded frame
     internal var _expandedFrame: CGRect!
 
-    /// The current state
-    internal var _isExpanded = false
-
     ///
     internal var _isViscosity: Bool? {
         willSet {
@@ -46,6 +43,9 @@ public class EView: UIView {
 
 
     // MARK: Public vars
+    /// The current state
+    public internal(set) var isExpanded = false
+
     /// The view's configuration
     /// Don't set it directly, replace with the function of `EView.applyConfig(_:)`
     public private(set) var config: EViewConfig! {
@@ -125,7 +125,7 @@ public extension EView {
             self.controlButton.isSelected = true
             self.controlButton!.frame.size = CGSize(width: 80, height: 30)
         }) {[unowned self] _ in
-            self._isExpanded = true
+            self.isExpanded = true
             EViewDataHolder.completionButton?.isHidden = !self.hasSelected(in: EViewDataHolder.multipleCellSelected!)
         }
     }
@@ -140,7 +140,7 @@ public extension EView {
             self.controlButton.isSelected = false
             self.controlButton!.frame.size = (rect ?? self._originalFrame).size
         }) {[unowned self] _ in
-            self._isExpanded = false
+            self.isExpanded = false
         }
     }
 
@@ -323,7 +323,7 @@ fileprivate extension EView {
 
     /// Touch action
     @objc func controlAction() {
-        _isExpanded ? fold() : expand()
+        isExpanded ? fold() : expand()
     }
 
     /// Click `Sure` button
@@ -349,7 +349,7 @@ fileprivate extension EView {
 
     /// The response function to PanGesture
     @objc fileprivate func panGestureAction(_ gesture: UIPanGestureRecognizer) {
-        guard !_isExpanded else { return }
+        guard !isExpanded else { return }
         switch gesture.state {
         case .changed:
             let position = gesture.location(in: _parentView)
